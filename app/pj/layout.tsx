@@ -10,7 +10,7 @@ export default async function PjLayout({
   const user = await getCurrentUser();
   return (
     <AppShell
-      brand="SMPITDM EKS"
+      brand="EKSKUL"
       user={{
         name: user.name,
         roleLabel: user.roleLabel,

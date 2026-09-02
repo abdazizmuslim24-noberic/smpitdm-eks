@@ -14,7 +14,7 @@ export default async function SiswaLayout({
 
   return (
     <AppShell
-      brand="SMPITDM EKS"
+      brand="EKSKUL"
       user={{
         name: user.name,
         roleLabel: user.roleLabel,

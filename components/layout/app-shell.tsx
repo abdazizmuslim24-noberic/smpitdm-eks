@@ -44,8 +44,8 @@ export function AppShell({ brand, user, navGroups, children }: AppShellProps) {
       {/* Sidebar (desktop) */}
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col bg-sidebar text-sidebar-foreground lg:flex">
         <div className="flex items-center gap-3 border-b border-white/10 px-5 py-5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary font-heading text-sm font-bold text-white">
-            EKS
+          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary font-heading text-xs font-bold text-white">
+            EKSKUL
           </div>
           <span className="font-heading font-bold text-white">{brand}</span>
         </div>
@@ -111,8 +111,8 @@ export function AppShell({ brand, user, navGroups, children }: AppShellProps) {
       {/* Mobile top bar */}
       <div className="fixed inset-x-0 top-0 z-30 flex h-14 items-center justify-between border-b bg-background px-4 lg:hidden">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary font-heading text-xs font-bold text-white">
-            EKS
+          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary font-heading text-[10px] font-bold text-white">
+            EKSKUL
           </div>
           <span className="font-heading font-bold">{brand}</span>
         </div>
@@ -138,7 +138,7 @@ export function AppShell({ brand, user, navGroups, children }: AppShellProps) {
         </header>
         <main className="flex-1 p-4 pt-20 lg:p-6 lg:pt-6">{children}</main>
         <footer className="border-t px-6 py-4 text-center text-xs text-muted-foreground">
-          SMPITDM EKS — Sistem Manajemen Ekstrakurikuler · Created by{" "}
+          SMPITDM EKSKUL — Sistem Manajemen Ekstrakurikuler · Created by{" "}
           <span className="font-semibold text-foreground">Pak Aziz Ms</span>
         </footer>
       </div>

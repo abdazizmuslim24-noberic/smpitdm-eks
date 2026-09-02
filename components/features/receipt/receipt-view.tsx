@@ -15,7 +15,7 @@ export function ReceiptView({ data }: { data: ReceiptData }) {
     <div className="rounded-lg border bg-card p-8 shadow-sm print:border-0 print:shadow-none">
       <div className="mb-6 flex items-start justify-between border-b pb-4">
         <div>
-          <div className="font-heading text-lg font-bold">SMPITDM EKS</div>
+          <div className="font-heading text-lg font-bold">SMPITDM EKSKUL</div>
           <div className="text-sm text-muted-foreground">
             Sistem Manajemen Ekstrakurikuler Sekolah
           </div>
@@ -59,7 +59,7 @@ export function ReceiptView({ data }: { data: ReceiptData }) {
       </div>
 
       <p className="mt-6 text-center text-xs text-muted-foreground">
-        Kuitansi ini dihasilkan otomatis oleh SMPITDM EKS.
+        Kuitansi ini dihasilkan otomatis oleh SMPITDM EKSKUL.
       </p>
     </div>
   );

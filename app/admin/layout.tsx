@@ -10,7 +10,7 @@ export default async function AdminLayout({
   const user = await getCurrentUser();
   return (
     <AppShell
-      brand="SMPITDM EKS"
+      brand="EKSKUL"
       user={{
         name: user.name,
         roleLabel: user.roleLabel,
