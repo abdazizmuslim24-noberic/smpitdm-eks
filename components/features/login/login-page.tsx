@@ -18,12 +18,6 @@ const loginSchema = z.object({
   password: z.string().min(1),
 });
 
-const demoRoles = [
-  { label: "Admin", email: "admin@example.com", role: "ADMIN" },
-  { label: "PJ/Guru", email: "guru1@example.com", role: "PJ_GURU" },
-  { label: "Siswa", email: "siswa1@example.com", role: "SISWA" },
-];
-
 export function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -60,11 +54,6 @@ export function LoginPage() {
       setError("Terjadi kesalahan jaringan.");
       setLoading(false);
     }
-  }
-
-  function fillDemo(r: (typeof demoRoles)[number]) {
-    setEmail(r.email);
-    setPassword("password123");
   }
 
   return (
@@ -107,25 +96,6 @@ export function LoginPage() {
           <p className="mt-1 text-sm text-muted-foreground">
             Silakan masuk dengan akun yang telah terdaftar.
           </p>
-
-          {/* Demo role picker */}
-          <div className="mt-6 grid grid-cols-3 gap-2">
-            {demoRoles.map((r) => (
-              <button
-                key={r.role}
-                type="button"
-                onClick={() => fillDemo(r)}
-                className="rounded-md border px-2 py-2 text-center transition-colors hover:border-ring hover:bg-primary/5"
-              >
-                <div className="text-xs font-semibold text-foreground">
-                  {r.label}
-                </div>
-                <div className="mt-0.5 truncate text-[10px] text-muted-foreground">
-                  {r.email}
-                </div>
-              </button>
-            ))}
-          </div>
 
           <form onSubmit={handleLogin} className="mt-6 space-y-4">
             <div className="space-y-2">
