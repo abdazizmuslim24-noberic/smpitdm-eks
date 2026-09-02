@@ -70,8 +70,8 @@ export function LoginPage() {
             Ekstrakurikuler Sekolah
           </h1>
           <p className="mt-4 text-lg opacity-95">
-            Kelola kegiatan, absensi, rekap, dan pembayaran secara terpusat
-            untuk Admin, PJ/Guru, dan Siswa.
+            Kelola kegiatan, absensi, rekap, dan pembayaran secara terpusat.
+            SMPIT DARUL MUTTAQIEN.
           </p>
 
           <div className="mt-10 space-y-4">
