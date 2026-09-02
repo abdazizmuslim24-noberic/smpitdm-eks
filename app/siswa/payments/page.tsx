@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/table";
 import { SiswaPaymentDialog } from "@/components/features/payment/siswa-payment-dialog";
 import { PaymentStatusBadge } from "@/components/features/payment/payment-badges";
-import { Paperclip } from "lucide-react";
+import { Paperclip, CreditCard } from "lucide-react";
 
 export const metadata = { title: "Pembayaran Saya" };
 
@@ -51,6 +51,24 @@ export default async function SiswaPaymentsPage() {
         description={pendingCount > 0 ? `${pendingCount} pembayaran menunggu verifikasi.` : "Riwayat pembayaran iuran Anda."}
         actions={<SiswaPaymentDialog />}
       />
+
+      <div className="mb-4 rounded-lg border border-primary/30 bg-primary/5 p-4">
+        <div className="flex items-start gap-3">
+          <CreditCard className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+          <div>
+            <div className="font-semibold">Petunjuk Transfer Pembayaran</div>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Transfer Pembayaran melalui No. Rekening BCA{" "}
+              <span className="font-semibold text-foreground">7005936063</span>{" "}
+              A/N{" "}
+              <span className="font-semibold text-foreground">
+                ABDUL AZIZ MUSLIM
+              </span>
+              . Simpan / Download bukti dan Upload di &quot;Bukti Pembayaran&quot;.
+            </p>
+          </div>
+        </div>
+      </div>
 
       <div className="rounded-lg border bg-card shadow-sm">
         <div className="overflow-x-auto p-2">
