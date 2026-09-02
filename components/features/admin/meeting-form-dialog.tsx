@@ -15,27 +15,84 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus, Loader2 } from "lucide-react";
+import { Plus, Loader2, Pencil } from "lucide-react";
+import type { MeetingStatus } from "@/db/schema";
 
 interface Ek {
   id: string;
   name: string;
 }
 
-export function MeetingFormDialog({ ekskulEndpoint = "/api/admin/master-options" }: { ekskulEndpoint?: string }) {
+export interface MeetingInput {
+  id: string;
+  topic: string;
+  meetingDate: string;
+  startTime: string | null;
+  endTime: string | null;
+  location: string | null;
+  status: MeetingStatus;
+  extracurricularId: string;
+}
+
+interface MeetingFormDialogProps {
+  ekskulEndpoint?: string;
+  meeting?: MeetingInput | null;
+}
+
+interface MeetingFormState {
+  extracurricularId: string;
+  meetingDate: string;
+  startTime: string;
+  endTime: string;
+  topic: string;
+  location: string;
+  status: string;
+}
+
+function toDateInputValue(date: Date | string): string {
+  const d = typeof date === "string" ? new Date(date) : date;
+  if (Number.isNaN(d.getTime())) return "";
+  const tz = new Date(
+    d.getFullYear(),
+    d.getMonth(),
+    d.getDate()
+  );
+  return tz.toISOString().slice(0, 10);
+}
+
+const emptyForm: MeetingFormState = {
+  extracurricularId: "",
+  meetingDate: "",
+  startTime: "",
+  endTime: "",
+  topic: "",
+  location: "",
+  status: "DIJADWALKAN",
+};
+
+export function MeetingFormDialog({
+  ekskulEndpoint = "/api/admin/master-options",
+  meeting,
+}: MeetingFormDialogProps) {
   const router = useRouter();
+  const isEdit = Boolean(meeting);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [ekskuls, setEkskuls] = useState<Ek[]>([]);
-  const [form, setForm] = useState({
-    extracurricularId: "",
-    meetingDate: "",
-    startTime: "",
-    endTime: "",
-    topic: "",
-    location: "",
-  });
+  const [form, setForm] = useState<MeetingFormState>(() =>
+    isEdit
+      ? {
+          extracurricularId: meeting!.extracurricularId,
+          meetingDate: toDateInputValue(meeting!.meetingDate),
+          startTime: meeting!.startTime ?? "",
+          endTime: meeting!.endTime ?? "",
+          topic: meeting!.topic,
+          location: meeting!.location ?? "",
+          status: meeting!.status,
+        }
+      : { ...emptyForm }
+  );
 
   useEffect(() => {
     if (open) {
@@ -43,13 +100,21 @@ export function MeetingFormDialog({ ekskulEndpoint = "/api/admin/master-options"
         .then((r) => r.json())
         .then((data) => {
           setEkskuls(data.extracurriculars ?? []);
-          if (data.extracurriculars?.length > 0) {
+          if (isEdit) {
+            setForm((f) =>
+              data.extracurriculars?.some(
+                (e: Ek) => e.id === f.extracurricularId
+              )
+                ? f
+                : { ...f, extracurricularId: data.extracurriculars?.[0]?.id ?? "" }
+            );
+          } else if (data.extracurriculars?.length > 0) {
             setForm((f) => ({ ...f, extracurricularId: data.extracurriculars[0].id }));
           }
         })
         .catch(() => {});
     }
-  }, [open, ekskulEndpoint]);
+  }, [open, ekskulEndpoint, isEdit]);
 
   function update(key: keyof typeof form, value: string) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -61,19 +126,20 @@ export function MeetingFormDialog({ ekskulEndpoint = "/api/admin/master-options"
     setLoading(true);
     try {
       const res = await fetch("/api/admin/meetings", {
-        method: "POST",
+        method: isEdit ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(isEdit ? { id: meeting!.id, ...form } : form),
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Gagal membuat pertemuan.");
+        setError(data.error ?? "Gagal menyimpan pertemuan.");
         setLoading(false);
         return;
       }
       setOpen(false);
-      setForm({ extracurricularId: "", meetingDate: "", startTime: "", endTime: "", topic: "", location: "" });
+      if (!isEdit) setForm({ ...emptyForm });
       router.refresh();
+      setLoading(false);
     } catch {
       setError("Terjadi kesalahan.");
       setLoading(false);
@@ -83,19 +149,29 @@ export function MeetingFormDialog({ ekskulEndpoint = "/api/admin/master-options"
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <Plus /> Buat Pertemuan
-        </Button>
+        {isEdit ? (
+          <Button size="sm" variant="outline" className="gap-1">
+            <Pencil className="h-4 w-4" /> Edit
+          </Button>
+        ) : (
+          <Button>
+            <Plus /> Buat Pertemuan
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Buat Pertemuan</DialogTitle>
-          <DialogDescription>Jadwalkan pertemuan ekstrakurikuler baru.</DialogDescription>
+          <DialogTitle>{isEdit ? "Edit Pertemuan" : "Buat Pertemuan"}</DialogTitle>
+          <DialogDescription>
+            {isEdit
+              ? "Perbarui jadwal pertemuan ekstrakurikuler."
+              : "Jadwalkan pertemuan ekstrakurikuler baru."}
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="ek">Ekstrakurikuler</Label>
-            <Select id="ek" value={form.extracurricularId} onChange={(e) => update("extracurricularId", e.target.value)}>
+            <Select id="ek" value={form.extracurricularId} onChange={(e) => update("extracurricularId", e.target.value)} disabled={isEdit}>
               {ekskuls.length === 0 && <option value="">Tidak ada ekskul aktif</option>}
               {ekskuls.map((e) => (
                 <option key={e.id} value={e.id}>{e.name}</option>
@@ -124,6 +200,17 @@ export function MeetingFormDialog({ ekskulEndpoint = "/api/admin/master-options"
             <Label htmlFor="loc">Lokasi</Label>
             <Input id="loc" value={form.location} onChange={(e) => update("location", e.target.value)} />
           </div>
+          {isEdit && (
+            <div className="space-y-2">
+              <Label htmlFor="status">Status</Label>
+              <Select id="status" value={form.status} onChange={(e) => update("status", e.target.value)}>
+                <option value="DIJADWALKAN">Dijadwalkan</option>
+                <option value="BERLANGSUNG">Berlangsung</option>
+                <option value="SELESAI">Selesai</option>
+                <option value="DIBATALKAN">Dibatalkan</option>
+              </Select>
+            </div>
+          )}
 
           {error && <p className="text-sm text-destructive">{error}</p>}
 
@@ -133,7 +220,7 @@ export function MeetingFormDialog({ ekskulEndpoint = "/api/admin/master-options"
             </Button>
             <Button type="submit" disabled={loading || !form.extracurricularId}>
               {loading && <Loader2 className="animate-spin" />}
-              Simpan
+              {isEdit ? "Simpan Perubahan" : "Simpan"}
             </Button>
           </DialogFooter>
         </form>

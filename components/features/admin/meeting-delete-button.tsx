@@ -8,20 +8,16 @@ import { Loader2, Trash2 } from "lucide-react";
 export function MeetingDeleteButton({
   id,
   topic,
-  status,
 }: {
   id: string;
   topic: string;
-  status: string;
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  if (status !== "SELESAI") return null;
-
   async function handleDelete() {
     const ok = window.confirm(
-      `Hapus kegiatan "${topic}"?\nKegiatan berstatus SELESAI akan dihapus permanen, termasuk data absensinya.`
+      `Hapus pertemuan "${topic}"?\nData pertemuan dan absensinya akan dihapus permanen.`
     );
     if (!ok) return;
     setLoading(true);
@@ -31,7 +27,7 @@ export function MeetingDeleteButton({
       });
       const data = await res.json();
       if (!res.ok) {
-        window.alert(data.error ?? "Gagal menghapus kegiatan.");
+        window.alert(data.error ?? "Gagal menghapus pertemuan.");
         setLoading(false);
         return;
       }
@@ -49,7 +45,7 @@ export function MeetingDeleteButton({
       className="gap-1"
       onClick={handleDelete}
       disabled={loading}
-      title="Hapus kegiatan (SELESAI)"
+      title="Hapus pertemuan"
     >
       {loading ? (
         <Loader2 className="h-4 w-4 animate-spin" />

@@ -13,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { MeetingFormDialog } from "@/components/features/admin/meeting-form-dialog";
+import { MeetingDeleteButton } from "@/components/features/admin/meeting-delete-button";
 import { ClipboardCheck } from "lucide-react";
 
 export const metadata = { title: "Pertemuan" };
@@ -32,6 +33,9 @@ export default async function AdminMeetingsPage() {
       date: meetings.meetingDate,
       location: meetings.location,
       status: meetings.status,
+      startTime: meetings.startTime,
+      endTime: meetings.endTime,
+      extracurricularId: meetings.extracurricularId,
       ekName: extracurriculars.name,
     })
     .from(meetings)
@@ -77,11 +81,26 @@ export default async function AdminMeetingsPage() {
                     <Badge variant={statusVariant[m.status] ?? "muted"}>{m.status}</Badge>
                   </TableCell>
                   <TableCell>
-                    <Button asChild variant="outline" size="sm">
-                      <a href={`/admin/attendance?meeting=${m.id}`}>
-                        <ClipboardCheck /> Absensi
-                      </a>
-                    </Button>
+                    <div className="flex items-center justify-end gap-2">
+                      <Button asChild variant="outline" size="sm">
+                        <a href={`/admin/attendance?meeting=${m.id}`}>
+                          <ClipboardCheck /> Absensi
+                        </a>
+                      </Button>
+                      <MeetingFormDialog
+                        meeting={{
+                          id: m.id,
+                          topic: m.topic,
+                          meetingDate: m.date.toISOString(),
+                          startTime: m.startTime,
+                          endTime: m.endTime,
+                          location: m.location,
+                          status: m.status,
+                          extracurricularId: m.extracurricularId,
+                        }}
+                      />
+                      <MeetingDeleteButton id={m.id} topic={m.topic} />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}

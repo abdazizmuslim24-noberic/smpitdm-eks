@@ -40,6 +40,9 @@ export default async function PjMeetingsPage() {
             date: meetings.meetingDate,
             location: meetings.location,
             status: meetings.status,
+            startTime: meetings.startTime,
+            endTime: meetings.endTime,
+            extracurricularId: meetings.extracurricularId,
             ekName: extracurriculars.name,
           })
           .from(meetings)
@@ -93,7 +96,20 @@ export default async function PjMeetingsPage() {
                           <ClipboardCheck /> Absensi
                         </a>
                       </Button>
-                      <MeetingDeleteButton id={m.id} topic={m.topic} status={m.status} />
+                      <MeetingFormDialog
+                        ekskulEndpoint="/api/pj/ekskuls"
+                        meeting={{
+                          id: m.id,
+                          topic: m.topic,
+                          meetingDate: m.date.toISOString(),
+                          startTime: m.startTime,
+                          endTime: m.endTime,
+                          location: m.location,
+                          status: m.status,
+                          extracurricularId: m.extracurricularId,
+                        }}
+                      />
+                      <MeetingDeleteButton id={m.id} topic={m.topic} />
                     </div>
                   </TableCell>
                 </TableRow>
