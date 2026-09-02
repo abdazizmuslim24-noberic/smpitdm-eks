@@ -58,30 +58,31 @@ export default async function SiswaPaymentsPage() {
           <div className="flex-1">
             <div className="font-semibold">Petunjuk Transfer Pembayaran</div>
             <p className="mt-1 text-sm text-muted-foreground">
-              Transfer Pembayaran melalui No. Rekening BCA{" "}
+              Transfer Pembayaran melalui No. Rek. BCA{" "}
               <span className="font-semibold text-foreground">7005936063</span>{" "}
               A/N{" "}
               <span className="font-semibold text-foreground">
                 ABDUL AZIZ MUSLIM
               </span>
-              . Simpan / Download bukti dan Upload di &quot;Bukti Pembayaran&quot;.
+              , bisa juga melalui scan QR di bawah ini.
             </p>
-            <div className="mt-4 flex items-start justify-between gap-4">
-              <div className="flex flex-col items-start gap-2">
-                <img
-                  src="/qr-bca.jpeg"
-                  alt="QRIS BCA Pembayaran"
-                  className="h-40 w-40 rounded-md border border-border object-contain bg-white"
-                />
-                <a
-                  href="/qr-bca.jpeg"
-                  download="QR-BCA-Pembayaran.jpeg"
-                  className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
-                >
-                  <Download className="h-4 w-4" /> Download QR
-                </a>
-              </div>
+            <div className="mt-4 flex flex-col items-center gap-3">
+              <img
+                src="/qr-bca.jpeg"
+                alt="QRIS BCA Pembayaran"
+                className="h-44 w-44 rounded-md border border-border object-contain bg-white"
+              />
+              <a
+                href="/qr-bca.jpeg"
+                download="QR-BCA-Pembayaran.jpeg"
+                className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
+              >
+                <Download className="h-4 w-4" /> Download QR
+              </a>
             </div>
+            <p className="mt-4 text-sm text-muted-foreground">
+              Simpan bukti transfer dan Upload di &quot;Bukti Pembayaran&quot;.
+            </p>
           </div>
         </div>
       </div>
