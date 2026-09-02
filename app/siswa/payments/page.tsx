@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/table";
 import { SiswaPaymentDialog } from "@/components/features/payment/siswa-payment-dialog";
 import { PaymentStatusBadge } from "@/components/features/payment/payment-badges";
-import { Paperclip, CreditCard } from "lucide-react";
+import { Paperclip, CreditCard, Download } from "lucide-react";
 
 export const metadata = { title: "Pembayaran Saya" };
 
@@ -55,7 +55,7 @@ export default async function SiswaPaymentsPage() {
       <div className="mb-4 rounded-lg border border-primary/30 bg-primary/5 p-4">
         <div className="flex items-start gap-3">
           <CreditCard className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-          <div>
+          <div className="flex-1">
             <div className="font-semibold">Petunjuk Transfer Pembayaran</div>
             <p className="mt-1 text-sm text-muted-foreground">
               Transfer Pembayaran melalui No. Rekening BCA{" "}
@@ -66,6 +66,22 @@ export default async function SiswaPaymentsPage() {
               </span>
               . Simpan / Download bukti dan Upload di &quot;Bukti Pembayaran&quot;.
             </p>
+            <div className="mt-4 flex items-start justify-between gap-4">
+              <div className="flex flex-col items-start gap-2">
+                <img
+                  src="/qr-bca.jpeg"
+                  alt="QRIS BCA Pembayaran"
+                  className="h-40 w-40 rounded-md border border-border object-contain bg-white"
+                />
+                <a
+                  href="/qr-bca.jpeg"
+                  download="QR-BCA-Pembayaran.jpeg"
+                  className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
+                >
+                  <Download className="h-4 w-4" /> Download QR
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
