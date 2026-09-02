@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Absensi Saya — SMPITDM EKS</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand"><div class="logo" data-icon="extracurricular"></div><span>SMPITDM EKS</span></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">Utama</div>
+        <a href="dashboard.html" class="nav-link" data-icon="dashboard">Dashboard</a>
+        <div class="nav-section">Ekskul Saya</div>
+        <a href="attendance.html" class="nav-link active" data-icon="attendance">Absensi Saya</a>
+        <a href="payments.html" class="nav-link" data-icon="payments">Pembayaran</a>
+        <a href="receipts.html" class="nav-link" data-icon="receipts">Bukti Pembayaran</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-card"><div class="avatar">SF</div><div class="user-info"><div class="user-name">Siti Fatimah</div><div class="user-role">Siswa Â· VII-1</div></div></div>
+        <a href="../index.html" class="nav-link" style="margin-top:12px;" data-icon="logout">Keluar</a>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="flex items-center gap-3">
+          <button class="icon-btn menu-toggle" id="menuToggle" data-icon="menu" aria-label="Buka menu"></button>
+          <span class="topbar-title">Absensi Saya</span>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-btn" data-icon="bell" aria-label="Notifikasi"></button>
+          <div class="identity"><div class="avatar-sm">SF</div><div><div class="id-name">Siti Fatimah</div><div class="id-sub">Siswa Â· VII-1</div></div></div>
+        </div>
+      </header>
+
+      <main class="content">
+        <!-- Filter -->
+        <div class="card mb-6">
+          <div class="card-body">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+              <div class="flex items-center gap-4">
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label">Ekstrakurikuler</label>
+                  <select class="form-control"><option>Semua Ekskul</option><option>Futsal</option><option>Pramuka</option></select>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label">Bulan</label>
+                  <input class="form-control" type="month" value="2026-09">
+                </div>
+              </div>
+              <div class="flex gap-3">
+                <button class="btn btn-outline btn-sm" data-icon="download">Export XLSX</button>
+                <button class="btn btn-outline btn-sm" data-icon="printer">Export PDF</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stat ringkas -->
+        <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);">
+          <div class="stat-card">
+            <div class="stat-icon bg-green" data-icon="check"></div>
+            <div><div class="stat-label">Hadir</div><div class="stat-value" style="color:var(--success);">7</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon bg-sky" data-icon="alert"></div>
+            <div><div class="stat-label">Izin</div><div class="stat-value" style="color:var(--info);">1</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon bg-amber" data-icon="alert"></div>
+            <div><div class="stat-label">Sakit</div><div class="stat-value" style="color:var(--warning);">0</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon bg-red" data-icon="alert"></div>
+            <div><div class="stat-label">Alpa</div><div class="stat-value" style="color:var(--danger);">1</div></div>
+          </div>
+        </div>
+
+        <!-- Tabel absensi -->
+        <div class="card mt-6">
+          <div class="card-header">
+            <div><div class="card-title">Riwayat Absensi</div><div class="card-subtitle">8 pertemuan tercatat</div></div>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr><th>Tanggal</th><th>Ekskul</th><th>Materi</th><th>Status</th><th>Catatan</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>04 Sep 2026</td><td>Futsal</td><td>Passing &amp; Shooting</td><td><span class="badge badge-success badge-dot">Hadir</span></td><td>â€”</td></tr>
+                <tr><td>27 Ags 2026</td><td>Pramuka</td><td>Survival Skills</td><td><span class="badge badge-success badge-dot">Hadir</span></td><td>â€”</td></tr>
+                <tr><td>21 Ags 2026</td><td>Futsal</td><td>Teknik Dribbling Lanjut</td><td><span class="badge badge-success badge-dot">Hadir</span></td><td>â€”</td></tr>
+                <tr><td>20 Ags 2026</td><td>Pramuka</td><td>Navigation &amp; Compass</td><td><span class="badge badge-info badge-dot">Izin</span></td><td>Keperluan keluarga</td></tr>
+                <tr><td>14 Ags 2026</td><td>Futsal</td><td>Game Internal</td><td><span class="badge badge-success badge-dot">Hadir</span></td><td>â€”</td></tr>
+                <tr><td>13 Ags 2026</td><td>Pramuka</td><td>Pioneering</td><td><span class="badge badge-success badge-dot">Hadir</span></td><td>â€”</td></tr>
+                <tr><td>07 Ags 2026</td><td>Futsal</td><td>Physical Training</td><td><span class="badge badge-danger badge-dot">Alpa</span></td><td>â€”</td></tr>
+                <tr><td>06 Ags 2026</td><td>Pramuka</td><td>First Aid</td><td><span class="badge badge-success badge-dot">Hadir</span></td><td>â€”</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+          <footer class="page-footer">SMPITDM EKS — Sistem Manajemen Ekstrakurikuler · Created by <strong>Pak Aziz Ms</strong></footer>
+</div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+</html>

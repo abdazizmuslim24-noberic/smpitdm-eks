@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pembayaran — SMPITDM EKS</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand"><div class="logo" data-icon="extracurricular"></div><span>SMPITDM EKS</span></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">Utama</div>
+        <a href="dashboard.html" class="nav-link" data-icon="dashboard">Dashboard</a>
+        <div class="nav-section">Data Master</div>
+        <a href="users.html" class="nav-link" data-icon="users">Pengguna</a>
+        <a href="students.html" class="nav-link" data-icon="students">Data Siswa</a>
+        <a href="extracurriculars.html" class="nav-link" data-icon="extracurricular">Ekstrakurikuler</a>
+        <a href="memberships.html" class="nav-link" data-icon="memberships">Keanggotaan</a>
+        <div class="nav-section">Operasional</div>
+        <a href="payments.html" class="nav-link active" data-icon="payments">Pembayaran</a>
+        <a href="reports.html" class="nav-link" data-icon="reports">Laporan &amp; Rekap</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-card"><div class="avatar">AD</div><div class="user-info"><div class="user-name">Dewi Anggraini</div><div class="user-role">Administrator</div></div></div>
+        <a href="../index.html" class="nav-link" style="margin-top:12px;" data-icon="logout">Keluar</a>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="flex items-center gap-3">
+          <button class="icon-btn menu-toggle" id="menuToggle" data-icon="menu" aria-label="Buka menu"></button>
+          <span class="topbar-title">Pembayaran</span>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-btn" data-icon="bell" aria-label="Notifikasi"></button>
+          <div class="identity"><div class="avatar-sm">AD</div><div><div class="id-name">Dewi Anggraini</div><div class="id-sub">Administrator</div></div></div>
+        </div>
+      </header>
+
+      <main class="content">
+        <!-- Stat row -->
+        <div class="stat-grid cols-3">
+          <div class="stat-card">
+            <div class="stat-icon bg-warning" data-icon="payments"></div>
+            <div><div class="stat-label">Menunggu Verifikasi</div><div class="stat-value">17</div><div class="stat-trend trend-down">perlu tindakan</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon bg-green" data-icon="wallet"></div>
+            <div><div class="stat-label">Lunas Bulan Ini</div><div class="stat-value">Rp 4,8 jt</div><div class="stat-trend trend-up">+12% vs bulan lalu</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon bg-red" data-icon="alert"></div>
+            <div><div class="stat-label">Ditolak</div><div class="stat-value">3</div><div class="stat-trend">bulan berjalan</div></div>
+          </div>
+        </div>
+
+        <div class="card mt-6">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Riwayat Pembayaran</div>
+              <div class="card-subtitle">312 transaksi bulan ini</div>
+            </div>
+            <div class="toolbar">
+              <div class="filters">
+                <div class="form-group">
+                  <select class="form-control">
+                    <option>Semua Ekskul</option><option>Futsal</option><option>Basket</option><option>Pramuka</option><option>Tahfidz</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <select class="form-control">
+                    <option>Semua Status</option><option>Menunggu Verifikasi</option><option>Lunas</option><option>Ditolak</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <input class="form-control" type="month" value="2026-09">
+                </div>
+                <div class="search-box">
+                  <span class="search-icon" data-icon="search"></span>
+                  <input class="form-control" type="text" placeholder="Cari siswa / transaksi...">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr><th>Transaksi</th><th>Siswa</th><th>Ekskul</th><th>Periode</th><th>Nominal</th><th>Metode</th><th>Status</th><th style="text-align:right;">Aksi</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-xs muted">TRX-2026090001</td>
+                  <td><div class="identity"><div class="avatar-sm">AF</div><div><div class="id-name">Ahmad Fauzan</div><div class="id-sub">VIII-2</div></div></div></td>
+                  <td>Futsal</td><td>Sep 2026</td><td>Rp 50.000</td><td>Transfer</td>
+                  <td><span class="badge badge-warning badge-dot">Menunggu</span></td>
+                  <td><div class="actions"><button class="btn btn-outline btn-sm" onclick="openModal('verifyModal')">Verifikasi</button></div></td>
+                </tr>
+                <tr>
+                  <td class="text-xs muted">TRX-2026090002</td>
+                  <td><div class="identity"><div class="avatar-sm">BN</div><div><div class="id-name">Bella Nurjanah</div><div class="id-sub">VII-1</div></div></div></td>
+                  <td>Basket</td><td>Sep 2026</td><td>Rp 45.000</td><td>Tunai</td>
+                  <td><span class="badge badge-warning badge-dot">Menunggu</span></td>
+                  <td><div class="actions"><button class="btn btn-outline btn-sm" onclick="openModal('verifyModal')">Verifikasi</button></div></td>
+                </tr>
+                <tr>
+                  <td class="text-xs muted">TRX-2026090003</td>
+                  <td><div class="identity"><div class="avatar-sm">CP</div><div><div class="id-name">Candra Putra</div><div class="id-sub">IX-3</div></div></div></td>
+                  <td>Pramuka</td><td>Sep 2026</td><td>Rp 35.000</td><td>Transfer</td>
+                  <td><span class="badge badge-warning badge-dot">Menunggu</span></td>
+                  <td><div class="actions"><button class="btn btn-outline btn-sm" onclick="openModal('verifyModal')">Verifikasi</button></div></td>
+                </tr>
+                <tr>
+                  <td class="text-xs muted">TRX-2026090004</td>
+                  <td><div class="identity"><div class="avatar-sm">DK</div><div><div class="id-name">Dewi Kurnia</div><div class="id-sub">VIII-1</div></div></div></td>
+                  <td>Tahfidz</td><td>Sep 2026</td><td>Rp 30.000</td><td>Transfer</td>
+                  <td><span class="badge badge-success badge-dot">Lunas</span></td>
+                  <td><div class="actions"><button class="btn btn-outline btn-sm" data-icon="printer">Bukti</button></div></td>
+                </tr>
+                <tr>
+                  <td class="text-xs muted">TRX-2026090005</td>
+                  <td><div class="identity"><div class="avatar-sm">EH</div><div><div class="id-name">Eko Hariyanto</div><div class="id-sub">VII-4</div></div></div></td>
+                  <td>Futsal</td><td>Sep 2026</td><td>Rp 50.000</td><td>Transfer</td>
+                  <td><span class="badge badge-danger badge-dot">Ditolak</span></td>
+                  <td><div class="actions"><button class="btn btn-outline btn-sm">Detail</button></div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination">
+            <button class="page-btn" disabled>&laquo;</button>
+            <button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">&raquo;</button>
+          </div>
+        </div>
+      </main>
+          <footer class="page-footer">SMPITDM EKS — Sistem Manajemen Ekstrakurikuler · Created by <strong>Pak Aziz Ms</strong></footer>
+</div>
+  </div>
+
+  <!-- Modal: Verifikasi Pembayaran -->
+  <div class="modal-overlay" id="verifyModal">
+    <div class="modal lg">
+      <div class="modal-header">
+        <span class="modal-title">Verifikasi Pembayaran</span>
+        <button class="modal-close" data-icon="x" aria-label="Tutup"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info" style="margin-bottom:16px;">
+          <div data-icon="alert"></div>
+          <div><div class="alert-title">TRX-2026090001</div>Transaksi ini memerlukan verifikasi oleh Admin atau PJ terkait.</div>
+        </div>
+
+        <div class="form-grid" style="gap:20px;">
+          <div class="form-group"><label class="form-label">Siswa</label><input class="form-control" type="text" value="Ahmad Fauzan (VIII-2)" disabled></div>
+          <div class="form-group"><label class="form-label">Ekskul</label><input class="form-control" type="text" value="Futsal" disabled></div>
+          <div class="form-group"><label class="form-label">Periode</label><input class="form-control" type="text" value="September 2026" disabled></div>
+          <div class="form-group"><label class="form-label">Nominal</label><input class="form-control" type="text" value="Rp 50.000" disabled></div>
+          <div class="form-group"><label class="form-label">Metode</label><input class="form-control" type="text" value="Transfer" disabled></div>
+          <div class="form-group"><label class="form-label">Tanggal Bayar</label><input class="form-control" type="text" value="01/09/2026" disabled></div>
+
+          <div class="form-group full">
+            <label class="form-label">Bukti Pembayaran</label>
+            <div class="card" style="border:2px dashed var(--border);padding:20px;text-align:center;">
+              <div class="text-sm muted">bukti-transfer-ahmad.jpg</div>
+              <div class="text-xs muted">JPG Â· 1.2 MB</div>
+            </div>
+          </div>
+
+          <div class="form-group full">
+            <label class="form-label">Catatan (wajib untuk penolakan)</label>
+            <textarea class="form-control" placeholder="Tambahkan catatan jika ditolak..." rows="2"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('verifyModal')">Tutup</button>
+        <button class="btn btn-danger" data-icon="trash">Tolak</button>
+        <button class="btn btn-success" data-icon="check">Terima / Verifikasi</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ekstrakurikuler — SMPITDM EKS</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand"><div class="logo" data-icon="extracurricular"></div><span>SMPITDM EKS</span></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">Utama</div>
+        <a href="dashboard.html" class="nav-link" data-icon="dashboard">Dashboard</a>
+        <div class="nav-section">Data Master</div>
+        <a href="users.html" class="nav-link" data-icon="users">Pengguna</a>
+        <a href="students.html" class="nav-link" data-icon="students">Data Siswa</a>
+        <a href="extracurriculars.html" class="nav-link active" data-icon="extracurricular">Ekstrakurikuler</a>
+        <a href="memberships.html" class="nav-link" data-icon="memberships">Keanggotaan</a>
+        <div class="nav-section">Operasional</div>
+        <a href="payments.html" class="nav-link" data-icon="payments">Pembayaran</a>
+        <a href="reports.html" class="nav-link" data-icon="reports">Laporan &amp; Rekap</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-card"><div class="avatar">AD</div><div class="user-info"><div class="user-name">Dewi Anggraini</div><div class="user-role">Administrator</div></div></div>
+        <a href="../index.html" class="nav-link" style="margin-top:12px;" data-icon="logout">Keluar</a>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="flex items-center gap-3">
+          <button class="icon-btn menu-toggle" id="menuToggle" data-icon="menu" aria-label="Buka menu"></button>
+          <span class="topbar-title">Ekstrakurikuler</span>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-btn" data-icon="bell" aria-label="Notifikasi"></button>
+          <div class="identity"><div class="avatar-sm">AD</div><div><div class="id-name">Dewi Anggraini</div><div class="id-sub">Administrator</div></div></div>
+        </div>
+      </header>
+
+      <main class="content">
+        <div class="toolbar mb-6">
+          <div class="search-box">
+            <span class="search-icon" data-icon="search"></span>
+            <input class="form-control" type="text" placeholder="Cari ekskul / kode...">
+          </div>
+          <button class="btn btn-primary" onclick="openModal('ekskulModal')" data-icon="plus">Tambah Ekskul</button>
+        </div>
+
+        <!-- Ekskul cards -->
+        <div class="grid-2">
+          <!-- Futsal -->
+          <div class="card">
+            <div class="card-body">
+              <div class="flex justify-between items-start">
+                <div class="identity">
+                  <div class="avatar-sm" style="background:var(--primary-soft);color:var(--primary);">FS</div>
+                  <div><div class="id-name">Futsal</div><div class="id-sub">EKS001</div></div>
+                </div>
+                <span class="badge badge-success">Aktif</span>
+              </div>
+              <p class="text-sm muted" style="margin-top:14px;">Olahraga futsal â€” teknik passing, dribbling, dan shooting.</p>
+              <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;">
+                <span class="badge badge-muted">Jumat Â· 15:30-17:00</span>
+                <span class="badge badge-muted">Lapangan</span>
+                <span class="badge badge-info">Rp 50.000/bln</span>
+              </div>
+              <div class="flex justify-between items-center" style="margin-top:14px;">
+                <div class="text-xs muted"><strong style="color:var(--foreground);">98</strong> anggota Â· PJ: Ahmad Fauzi, S.Pd.</div>
+                <div class="actions">
+                  <button class="btn btn-outline btn-sm" data-icon="edit" onclick="openModal('ekskulModal')">Edit</button>
+                  <button class="btn btn-outline btn-sm" data-icon="trash">Hapus</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Basket -->
+          <div class="card">
+            <div class="card-body">
+              <div class="flex justify-between items-start">
+                <div class="identity">
+                  <div class="avatar-sm" style="background:var(--warning-soft);color:var(--warning);">BK</div>
+                  <div><div class="id-name">Basket</div><div class="id-sub">EKS002</div></div>
+                </div>
+                <span class="badge badge-success">Aktif</span>
+              </div>
+              <p class="text-sm muted" style="margin-top:14px;">Bola basket â€” dasar dribble, passing, lay-up, dan defense.</p>
+              <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;">
+                <span class="badge badge-muted">Sabtu Â· 08:00-09:30</span>
+                <span class="badge badge-muted">GOR</span>
+                <span class="badge badge-info">Rp 45.000/bln</span>
+              </div>
+              <div class="flex justify-between items-center" style="margin-top:14px;">
+                <div class="text-xs muted"><strong style="color:var(--foreground);">76</strong> anggota Â· PJ: Budi Santoso, S.Pd.</div>
+                <div class="actions">
+                  <button class="btn btn-outline btn-sm" data-icon="edit" onclick="openModal('ekskulModal')">Edit</button>
+                  <button class="btn btn-outline btn-sm" data-icon="trash">Hapus</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pramuka -->
+          <div class="card">
+            <div class="card-body">
+              <div class="flex justify-between items-start">
+                <div class="identity">
+                  <div class="avatar-sm" style="background:var(--success-soft);color:var(--success);">PM</div>
+                  <div><div class="id-name">Pramuka</div><div class="id-sub">EKS003</div></div>
+                </div>
+                <span class="badge badge-success">Aktif</span>
+              </div>
+              <p class="text-sm muted" style="margin-top:14px;">Pramuka â€” kepramukaan, kepemimpinan, dan kemandirian.</p>
+              <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;">
+                <span class="badge badge-muted">Rabu Â· 15:00-17:00</span>
+                <span class="badge badge-muted">Lapangan</span>
+                <span class="badge badge-info">Rp 35.000/bln</span>
+              </div>
+              <div class="flex justify-between items-center" style="margin-top:14px;">
+                <div class="text-xs muted"><strong style="color:var(--foreground);">88</strong> anggota Â· PJ: Susi Rahayu</div>
+                <div class="actions">
+                  <button class="btn btn-outline btn-sm" data-icon="edit" onclick="openModal('ekskulModal')">Edit</button>
+                  <button class="btn btn-outline btn-sm" data-icon="trash">Hapus</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tahfidz -->
+          <div class="card">
+            <div class="card-body">
+              <div class="flex justify-between items-start">
+                <div class="identity">
+                  <div class="avatar-sm" style="background:var(--danger-soft);color:var(--danger);">TH</div>
+                  <div><div class="id-name">Tahfidz</div><div class="id-sub">EKS004</div></div>
+                </div>
+                <span class="badge badge-success">Aktif</span>
+              </div>
+              <p class="text-sm muted" style="margin-top:14px;">Program hafalan Al-Qur'an dengan target per-semester.</p>
+              <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;">
+                <span class="badge badge-muted">Senin Â· 16:00-17:30</span>
+                <span class="badge badge-muted">Musala</span>
+                <span class="badge badge-info">Rp 30.000/bln</span>
+              </div>
+              <div class="flex justify-between items-center" style="margin-top:14px;">
+                <div class="text-xs muted"><strong style="color:var(--foreground);">50</strong> anggota Â· PJ: Ust. Hanif</div>
+                <div class="actions">
+                  <button class="btn btn-outline btn-sm" data-icon="edit" onclick="openModal('ekskulModal')">Edit</button>
+                  <button class="btn btn-outline btn-sm" data-icon="trash">Hapus</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+          <footer class="page-footer">SMPITDM EKS — Sistem Manajemen Ekstrakurikuler · Created by <strong>Pak Aziz Ms</strong></footer>
+</div>
+  </div>
+
+  <div class="modal-overlay" id="ekskulModal">
+    <div class="modal lg">
+      <div class="modal-header">
+        <span class="modal-title">Tambah Ekstrakurikuler</span>
+        <button class="modal-close" data-icon="x" aria-label="Tutup"></button>
+      </div>
+      <div class="modal-body">
+        <form class="form-grid cols-3">
+          <div class="form-group"><label class="form-label">Kode <span class="req">*</span></label><input class="form-control" type="text" placeholder="EKS005"></div>
+          <div class="form-group" style="grid-column: span 2;"><label class="form-label">Nama <span class="req">*</span></label><input class="form-control" type="text" placeholder="Nama ekskul"></div>
+          <div class="form-group full"><label class="form-label">Deskripsi</label><textarea class="form-control" placeholder="Deskripsi singkat ekskul"></textarea></div>
+          <div class="form-group"><label class="form-label">Hari <span class="req">*</span></label><select class="form-control"><option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option></select></div>
+          <div class="form-group"><label class="form-label">Jam Mulai</label><input class="form-control" type="time"></div>
+          <div class="form-group"><label class="form-label">Jam Selesai</label><input class="form-control" type="time"></div>
+          <div class="form-group"><label class="form-label">Tempat</label><input class="form-control" type="text" placeholder="Lapangan / ruang"></div>
+          <div class="form-group"><label class="form-label">Biaya Bulanan</label><input class="form-control" type="number" placeholder="50000"></div>
+          <div class="form-group"><label class="form-label">Status</label><select class="form-control"><option>Aktif</option><option>Nonaktif</option></select></div>
+          <div class="form-group full"><label class="form-label">PJ / Guru Penanggung Jawab</label><select class="form-control"><option>Pilih guru...</option><option>Ahmad Fauzi, S.Pd.</option><option>Budi Santoso, S.Pd.</option><option>Susi Rahayu</option><option>Ust. Hanif</option></select></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('ekskulModal')">Batal</button>
+        <button class="btn btn-primary">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+</html>

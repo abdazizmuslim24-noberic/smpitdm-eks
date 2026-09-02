@@ -1,0 +1,268 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Admin — SMPITDM EKS</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo" data-icon="extracurricular"></div>
+        <span>SMPITDM EKS</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section">Utama</div>
+        <a href="dashboard.html" class="nav-link active" data-icon="dashboard">Dashboard</a>
+
+        <div class="nav-section">Data Master</div>
+        <a href="users.html" class="nav-link" data-icon="users">Pengguna</a>
+        <a href="students.html" class="nav-link" data-icon="students">Data Siswa</a>
+        <a href="extracurriculars.html" class="nav-link" data-icon="extracurricular">Ekstrakurikuler</a>
+        <a href="memberships.html" class="nav-link" data-icon="memberships">Keanggotaan</a>
+
+        <div class="nav-section">Operasional</div>
+        <a href="payments.html" class="nav-link" data-icon="payments">Pembayaran</a>
+        <a href="reports.html" class="nav-link" data-icon="reports">Laporan &amp; Rekap</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <div class="avatar">AD</div>
+          <div class="user-info">
+            <div class="user-name">Dewi Anggraini</div>
+            <div class="user-role">Administrator</div>
+          </div>
+        </div>
+        <a href="../index.html" class="nav-link" style="margin-top:12px;" data-icon="logout">Keluar</a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main">
+      <header class="topbar">
+        <div class="flex items-center gap-3">
+          <button class="icon-btn menu-toggle" id="menuToggle" data-icon="menu" aria-label="Buka menu"></button>
+          <span class="topbar-title">Dashboard</span>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-btn" data-icon="bell" aria-label="Notifikasi"></button>
+          <div class="identity">
+            <div class="avatar-sm">AD</div>
+            <div><div class="id-name">Dewi Anggraini</div><div class="id-sub">Administrator</div></div>
+          </div>
+        </div>
+      </header>
+
+      <main class="content">
+        <!-- Stat cards -->
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon bg-indigo" data-icon="extracurricular"></div>
+            <div>
+              <div class="stat-label">Total Ekskul</div>
+              <div class="stat-value">4</div>
+              <div class="stat-trend trend-up">+1 bulan ini</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon bg-sky" data-icon="users"></div>
+            <div>
+              <div class="stat-label">Guru / PJ</div>
+              <div class="stat-value">12</div>
+              <div class="stat-trend trend-up">+2 bulan ini</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon bg-green" data-icon="students"></div>
+            <div>
+              <div class="stat-label">Total Siswa</div>
+              <div class="stat-value">486</div>
+              <div class="stat-trend trend-up">+18 bulan ini</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon bg-amber" data-icon="memberships"></div>
+            <div>
+              <div class="stat-label">Anggota Ekskul</div>
+              <div class="stat-value">312</div>
+              <div class="stat-trend">aktif</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="stat-grid mt-6">
+          <div class="stat-card">
+            <div class="stat-icon bg-indigo" data-icon="meetings"></div>
+            <div>
+              <div class="stat-label">Pertemuan Bulan Ini</div>
+              <div class="stat-value">48</div>
+              <div class="stat-trend">terjadwal</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon bg-sky" data-icon="attendance"></div>
+            <div>
+              <div class="stat-label">Rata-rata Kehadiran</div>
+              <div class="stat-value">92%</div>
+              <div class="stat-trend trend-up">+3% vs bulan lalu</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon bg-warning" data-icon="payments"></div>
+            <div>
+              <div class="stat-label">Menunggu Verifikasi</div>
+              <div class="stat-value">17</div>
+              <div class="stat-trend trend-down">perlu tindakan</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon bg-green" data-icon="wallet"></div>
+            <div>
+              <div class="stat-label">Pembayaran Lunas</div>
+              <div class="stat-value">Rp 4,8 jt</div>
+              <div class="stat-trend trend-up">bulan berjalan</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts row -->
+        <div class="grid-2-1 mt-6">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Tren Kehadiran</div>
+                <div class="card-subtitle">Persentase kehadiran per minggu (2026)</div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div style="display:flex;align-items:flex-end;gap:12px;height:200px;">
+                <svg viewBox="0 0 600 180" width="100%" height="180" preserveAspectRatio="none" aria-hidden="true">
+                  <!-- grid lines -->
+                  <g stroke="#E5E7EB" stroke-width="1">
+                    <line x1="0" y1="30" x2="600" y2="30"/><line x1="0" y1="70" x2="600" y2="70"/>
+                    <line x1="0" y1="110" x2="600" y2="110"/><line x1="0" y1="150" x2="600" y2="150"/>
+                  </g>
+                  <!-- area fill -->
+                  <path d="M0,120 C40,112 60,100 90,98 C120,95 140,80 170,82 C200,84 220,70 250,66 C280,62 300,58 330,52 C360,45 390,48 420,40 C450,30 480,34 510,28 C540,22 570,20 600,16 L600,180 L0,180 Z" fill="#EEF2FF"/>
+                  <!-- line -->
+                  <path d="M0,120 C40,112 60,100 90,98 C120,95 140,80 170,82 C200,84 220,70 250,66 C280,62 300,58 330,52 C360,45 390,48 420,40 C450,30 480,34 510,28 C540,22 570,20 600,16" fill="none" stroke="#4F46E5" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="flex justify-between text-xs muted" style="margin-top:4px;">
+                <span>W1</span><span>W2</span><span>W3</span><span>W4</span><span>W5</span><span>W6</span><span>W7</span><span>W8</span><span>W9</span><span>W10</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Distribusi Ekskul</div>
+                <div class="card-subtitle">Anggota per ekskul</div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:18px;">
+                <div>
+                  <div class="flex justify-between text-sm mb-4"><span>Futsal</span><span class="muted">98 anggota</span></div>
+                  <div class="progress"><div class="progress-bar" style="width:85%;"></div></div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-sm mb-4"><span>Basket</span><span class="muted">76 anggota</span></div>
+                  <div class="progress"><div class="progress-bar success" style="width:66%;"></div></div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-sm mb-4"><span>Pramuka</span><span class="muted">88 anggota</span></div>
+                  <div class="progress"><div class="progress-bar warning" style="width:48%;"></div></div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-sm mb-4"><span>Tahfidz</span><span class="muted">50 anggota</span></div>
+                  <div class="progress"><div class="progress-bar" style="width:34%;"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payments pending + recent -->
+        <div class="grid-2 mt-6">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Pembayaran Menunggu Verifikasi</div>
+                <div class="card-subtitle">Butuh tindakan dari Admin / PJ</div>
+              </div>
+              <a href="payments.html" class="btn btn-ghost btn-sm">Lihat semua</a>
+            </div>
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr><th>Siswa</th><th>Ekskul</th><th>Nominal</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><div class="identity"><div class="avatar-sm">AF</div><div><div class="id-name">Ahmad Fauzan</div><div class="id-sub">VIII-2</div></div></div></td>
+                    <td>Futsal</td>
+                    <td>Rp 50.000</td>
+                    <td><span class="badge badge-warning badge-dot">Menunggu</span></td>
+                  </tr>
+                  <tr>
+                    <td><div class="identity"><div class="avatar-sm">BN</div><div><div class="id-name">Bella Nurjanah</div><div class="id-sub">VII-1</div></div></div></td>
+                    <td>Basket</td>
+                    <td>Rp 45.000</td>
+                    <td><span class="badge badge-warning badge-dot">Menunggu</span></td>
+                  </tr>
+                  <tr>
+                    <td><div class="identity"><div class="avatar-sm">CP</div><div><div class="id-name">Candra Putra</div><div class="id-sub">IX-3</div></div></div></td>
+                    <td>Pramuka</td>
+                    <td>Rp 35.000</td>
+                    <td><span class="badge badge-warning badge-dot">Menunggu</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Pertemuan Mendatang</div>
+                <div class="card-subtitle">Jadwal minggu ini</div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <div class="flex justify-between items-center">
+                  <div><div class="id-name">Futsal</div><div class="text-xs muted">Jumat, 04 Sep Â· 15:30 - 17:00</div></div>
+                  <span class="badge badge-info">Lapangan</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <div><div class="id-name">Basket</div><div class="text-xs muted">Sabtu, 05 Sep Â· 08:00 - 09:30</div></div>
+                  <span class="badge badge-info">GOR</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <div><div class="id-name">Tahfidz</div><div class="text-xs muted">Senin, 07 Sep Â· 16:00 - 17:30</div></div>
+                  <span class="badge badge-info">Musala</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <div><div class="id-name">Pramuka</div><div class="text-xs muted">Rabu, 09 Sep Â· 15:00 - 17:00</div></div>
+                  <span class="badge badge-info">Lapangan</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+          <footer class="page-footer">SMPITDM EKS — Sistem Manajemen Ekstrakurikuler · Created by <strong>Pak Aziz Ms</strong></footer>
+</div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+</html>

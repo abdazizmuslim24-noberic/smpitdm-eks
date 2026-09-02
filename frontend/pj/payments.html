@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pembayaran — SMPITDM EKS</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand"><div class="logo" data-icon="extracurricular"></div><span>SMPITDM EKS</span></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">Utama</div>
+        <a href="dashboard.html" class="nav-link" data-icon="dashboard">Dashboard</a>
+        <div class="nav-section">Ekskul Saya (Futsal)</div>
+        <a href="meetings.html" class="nav-link" data-icon="meetings">Pertemuan</a>
+        <a href="attendance.html" class="nav-link" data-icon="attendance">Absensi</a>
+        <a href="payments.html" class="nav-link active" data-icon="payments">Pembayaran</a>
+        <a href="reports.html" class="nav-link" data-icon="reports">Laporan &amp; Rekap</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-card"><div class="avatar">AF</div><div class="user-info"><div class="user-name">Ahmad Fauzi, S.Pd.</div><div class="user-role">PJ â€” Futsal</div></div></div>
+        <a href="../index.html" class="nav-link" style="margin-top:12px;" data-icon="logout">Keluar</a>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="flex items-center gap-3">
+          <button class="icon-btn menu-toggle" id="menuToggle" data-icon="menu" aria-label="Buka menu"></button>
+          <span class="topbar-title">Pembayaran â€” Futsal</span>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-btn" data-icon="bell" aria-label="Notifikasi"></button>
+          <div class="identity"><div class="avatar-sm">AF</div><div><div class="id-name">Ahmad Fauzi, S.Pd.</div><div class="id-sub">PJ â€” Futsal</div></div></div>
+        </div>
+      </header>
+
+      <main class="content">
+        <!-- Stat cards -->
+        <div class="stat-grid cols-3">
+          <div class="stat-card">
+            <div class="stat-icon bg-warning" data-icon="payments"></div>
+            <div><div class="stat-label">Menunggu Verifikasi</div><div class="stat-value">7</div><div class="stat-trend trend-down">perlu tindakan</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon bg-green" data-icon="wallet"></div>
+            <div><div class="stat-label">Lunas Bulan Ini</div><div class="stat-value">Rp 3,2 jt</div><div class="stat-trend trend-up">+8% vs bulan lalu</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon bg-red" data-icon="alert"></div>
+            <div><div class="stat-label">Ditolak</div><div class="stat-value">2</div><div class="stat-trend">bulan berjalan</div></div>
+          </div>
+        </div>
+
+        <div class="card mt-6">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Pembayaran â€” Futsal</div>
+              <div class="card-subtitle">Hanya menampilkan transaksi ekskul yang menjadi tanggung jawab Anda</div>
+            </div>
+            <div class="toolbar">
+              <div class="filters">
+                <div class="form-group">
+                  <select class="form-control">
+                    <option>Semua Status</option><option>Menunggu Verifikasi</option><option>Lunas</option><option>Ditolak</option>
+                  </select>
+                </div>
+                <button class="btn btn-primary" onclick="openModal('payModal')" data-icon="plus">Input Pembayaran</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr><th>Transaksi</th><th>Siswa</th><th>Periode</th><th>Nominal</th><th>Metode</th><th>Status</th><th style="text-align:right;">Aksi</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-xs muted">TRX-2026090001</td>
+                  <td><div class="identity"><div class="avatar-sm">AF</div><div><div class="id-name">Ahmad Fauzan</div><div class="id-sub">VIII-2</div></div></div></td>
+                  <td>Sep 2026</td><td>Rp 50.000</td><td>Transfer</td>
+                  <td><span class="badge badge-warning badge-dot">Menunggu</span></td>
+                  <td><div class="actions"><button class="btn btn-outline btn-sm" onclick="openModal('verifyModal')">Verifikasi</button></div></td>
+                </tr>
+                <tr>
+                  <td class="text-xs muted">TRX-2026090002</td>
+                  <td><div class="identity"><div class="avatar-sm">GR</div><div><div class="id-name">Gilang Ramadhan</div><div class="id-sub">VIII-3</div></div></div></td>
+                  <td>Sep 2026</td><td>Rp 50.000</td><td>Tunai</td>
+                  <td><span class="badge badge-success badge-dot">Lunas</span></td>
+                  <td><div class="actions"><button class="btn btn-outline btn-sm" data-icon="printer">Bukti</button></div></td>
+                </tr>
+                <tr>
+                  <td class="text-xs muted">TRX-2026090003</td>
+                  <td><div class="identity"><div class="avatar-sm">EH</div><div><div class="id-name">Eko Hariyanto</div><div class="id-sub">VII-4</div></div></div></td>
+                  <td>Sep 2026</td><td>Rp 50.000</td><td>Transfer</td>
+                  <td><span class="badge badge-danger badge-dot">Ditolak</span></td>
+                  <td><div class="actions"><button class="btn btn-outline btn-sm">Detail</button></div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination">
+            <button class="page-btn" disabled>&laquo;</button>
+            <button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">&raquo;</button>
+          </div>
+        </div>
+      </main>
+          <footer class="page-footer">SMPITDM EKS — Sistem Manajemen Ekstrakurikuler · Created by <strong>Pak Aziz Ms</strong></footer>
+</div>
+  </div>
+
+  <!-- Modal: Input Pembayaran Manual -->
+  <div class="modal-overlay" id="payModal">
+    <div class="modal lg">
+      <div class="modal-header">
+        <span class="modal-title">Input Pembayaran Manual</span>
+        <button class="modal-close" data-icon="x" aria-label="Tutup"></button>
+      </div>
+      <div class="modal-body">
+        <form class="form-grid">
+          <div class="form-group"><label class="form-label">Siswa <span class="req">*</span></label><select class="form-control"><option>Ahmad Fauzan (VIII-2)</option><option>Gilang Ramadhan (VIII-3)</option><option>Eko Hariyanto (VII-4)</option></select></div>
+          <div class="form-group"><label class="form-label">Ekstrakurikuler</label><input class="form-control" type="text" value="Futsal" disabled></div>
+          <div class="form-group"><label class="form-label">Periode <span class="req">*</span></label><input class="form-control" type="month" value="2026-09"></div>
+          <div class="form-group"><label class="form-label">Tanggal Bayar <span class="req">*</span></label><input class="form-control" type="date"></div>
+          <div class="form-group"><label class="form-label">Nominal (Rp) <span class="req">*</span></label><input class="form-control" type="number" value="50000"></div>
+          <div class="form-group"><label class="form-label">Metode Bayar</label><select class="form-control"><option>Tunai</option><option>Transfer</option><option>Lainnya</option></select></div>
+          <div class="form-group"><label class="form-label">Nomor Referensi</label><input class="form-control" type="text" placeholder="Opsional"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('payModal')">Batal</button>
+        <button class="btn btn-primary">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Verifikasi Pembayaran -->
+  <div class="modal-overlay" id="verifyModal">
+    <div class="modal lg">
+      <div class="modal-header">
+        <span class="modal-title">Verifikasi Pembayaran</span>
+        <button class="modal-close" data-icon="x" aria-label="Tutup"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info" style="margin-bottom:16px;">
+          <div data-icon="alert"></div>
+          <div><div class="alert-title">TRX-2026090001</div>Pembayaran ini memerlukan verifikasi oleh PJ.</div>
+        </div>
+        <div class="form-grid" style="gap:20px;">
+          <div class="form-group"><label class="form-label">Siswa</label><input class="form-control" type="text" value="Ahmad Fauzan (VIII-2)" disabled></div>
+          <div class="form-group"><label class="form-label">Nominal</label><input class="form-control" type="text" value="Rp 50.000" disabled></div>
+          <div class="form-group"><label class="form-label">Periode</label><input class="form-control" type="text" value="September 2026" disabled></div>
+          <div class="form-group"><label class="form-label">Metode</label><input class="form-control" type="text" value="Transfer" disabled></div>
+          <div class="form-group full">
+            <label class="form-label">Catatan (wajib untuk penolakan)</label>
+            <textarea class="form-control" placeholder="Tambahkan catatan jika ditolak..." rows="2"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('verifyModal')">Tutup</button>
+        <button class="btn btn-danger">Tolak</button>
+        <button class="btn btn-success" data-icon="check">Verifikasi</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+</html>

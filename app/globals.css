@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 236 40% 97%;
+    --foreground: 224 71% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 244 46% 20%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 244 46% 20%;
+    --primary: 243 75% 59%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 238 88% 74%;
+    --secondary-foreground: 244 46% 20%;
+    --muted: 228 33% 95%;
+    --muted-foreground: 222 14% 46%;
+    --accent: 25 100% 51%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 142 71% 36%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 45%;
+    --warning-foreground: 0 0% 100%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 243 75% 59%;
+    --sidebar: 244 46% 20%;
+    --sidebar-foreground: 226 64% 86%;
+    --radius: 0.75rem;
+
+    --font-heading: "Poppins", ui-sans-serif, sans-serif;
+    --font-body: "Open Sans", ui-sans-serif, sans-serif;
+  }
+
+  .dark {
+    --background: 240 10% 4%;
+    --foreground: 220 13% 96%;
+    --card: 240 10% 7%;
+    --card-foreground: 220 13% 96%;
+    --popover: 240 10% 7%;
+    --popover-foreground: 220 13% 96%;
+    --primary: 243 75% 68%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 238 88% 74%;
+    --secondary-foreground: 244 46% 20%;
+    --muted: 240 10% 12%;
+    --muted-foreground: 220 10% 70%;
+    --accent: 25 100% 55%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 60% 45%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 10% 20%;
+    --input: 240 10% 20%;
+    --ring: 243 75% 59%;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-heading);
+  }
+}

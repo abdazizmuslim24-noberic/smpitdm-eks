@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Absensi — SMPITDM EKS</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand"><div class="logo" data-icon="extracurricular"></div><span>SMPITDM EKS</span></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">Utama</div>
+        <a href="dashboard.html" class="nav-link" data-icon="dashboard">Dashboard</a>
+        <div class="nav-section">Ekskul Saya (Futsal)</div>
+        <a href="meetings.html" class="nav-link" data-icon="meetings">Pertemuan</a>
+        <a href="attendance.html" class="nav-link active" data-icon="attendance">Absensi</a>
+        <a href="payments.html" class="nav-link" data-icon="payments">Pembayaran</a>
+        <a href="reports.html" class="nav-link" data-icon="reports">Laporan &amp; Rekap</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-card"><div class="avatar">AF</div><div class="user-info"><div class="user-name">Ahmad Fauzi, S.Pd.</div><div class="user-role">PJ â€” Futsal</div></div></div>
+        <a href="../index.html" class="nav-link" style="margin-top:12px;" data-icon="logout">Keluar</a>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="flex items-center gap-3">
+          <button class="icon-btn menu-toggle" id="menuToggle" data-icon="menu" aria-label="Buka menu"></button>
+          <span class="topbar-title">Absensi â€” Futsal</span>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-btn" data-icon="bell" aria-label="Notifikasi"></button>
+          <div class="identity"><div class="avatar-sm">AF</div><div><div class="id-name">Ahmad Fauzi, S.Pd.</div><div class="id-sub">PJ â€” Futsal</div></div></div>
+        </div>
+      </header>
+
+      <main class="content">
+        <!-- Pertemuan selector -->
+        <div class="card mb-6">
+          <div class="card-body">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">Pertemuan</label>
+                <select class="form-control" style="min-width:260px;">
+                  <option selected>04 Sep 2026 â€” Passing &amp; Shooting (Selesai)</option>
+                  <option>11 Sep 2026 â€” Teknik Goal Keeping (Dijadwalkan)</option>
+                  <option>28 Ags 2026 â€” Teknik Dribbling Lanjut (Selesai)</option>
+                </select>
+              </div>
+              <div class="flex gap-3">
+                <button class="btn btn-outline btn-sm" data-icon="download">Export XLSX</button>
+                <button class="btn btn-outline btn-sm" data-icon="printer">Export PDF</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Input Absensi â€” Futsal</div>
+              <div class="card-subtitle">Jumat, 04 September 2026 Â· 98 anggota aktif</div>
+            </div>
+            <div class="flex gap-3">
+              <button type="button" class="btn btn-outline btn-sm" onclick="markAll('H')">Hadir Semua</button>
+              <button type="button" class="btn btn-primary btn-sm" onclick="openModal('saveConfirm')">Simpan Absensi</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr><th style="width:40px;">No</th><th>Nama Siswa</th><th>Kelas</th><th>Status</th><th>Catatan</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td><div class="identity"><div class="avatar-sm">AF</div><div class="id-name">Ahmad Fauzan</div></div></td>
+                  <td>VIII-2</td>
+                  <td><div class="att-status"><span class="status-chip selected" onclick="selectChip(this)" data-status="H">H</span><span class="status-chip" onclick="selectChip(this)" data-status="I">I</span><span class="status-chip" onclick="selectChip(this)" data-status="S">S</span><span class="status-chip" onclick="selectChip(this)" data-status="A">A</span></div></td>
+                  <td><input class="form-control" type="text" placeholder="Catatan..." style="width:160px;font-size:0.82rem;"></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td><div class="identity"><div class="avatar-sm">BN</div><div class="id-name">Bella Nurjanah</div></div></td>
+                  <td>VII-1</td>
+                  <td><div class="att-status"><span class="status-chip selected" onclick="selectChip(this)" data-status="H">H</span><span class="status-chip" onclick="selectChip(this)" data-status="I">I</span><span class="status-chip" onclick="selectChip(this)" data-status="S">S</span><span class="status-chip" onclick="selectChip(this)" data-status="A">A</span></div></td>
+                  <td><input class="form-control" type="text" placeholder="Catatan..." style="width:160px;font-size:0.82rem;"></td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td><div class="identity"><div class="avatar-sm">CP</div><div class="id-name">Candra Putra</div></div></td>
+                  <td>IX-3</td>
+                  <td><div class="att-status"><span class="status-chip" onclick="selectChip(this)" data-status="H">H</span><span class="status-chip" onclick="selectChip(this)" data-status="I">I</span><span class="status-chip selected" onclick="selectChip(this)" data-status="S">S</span><span class="status-chip" onclick="selectChip(this)" data-status="A">A</span></div></td>
+                  <td><input class="form-control" type="text" value="Sakit flu" style="width:160px;font-size:0.82rem;"></td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td><div class="identity"><div class="avatar-sm">DK</div><div class="id-name">Dewi Kurnia</div></div></td>
+                  <td>VIII-1</td>
+                  <td><div class="att-status"><span class="status-chip" onclick="selectChip(this)" data-status="H">H</span><span class="status-chip selected" onclick="selectChip(this)" data-status="I">I</span><span class="status-chip" onclick="selectChip(this)" data-status="S">S</span><span class="status-chip" onclick="selectChip(this)" data-status="A">A</span></div></td>
+                  <td><input class="form-control" type="text" value="Izin keluarga" style="width:160px;font-size:0.82rem;"></td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td><div class="identity"><div class="avatar-sm">EH</div><div class="id-name">Eko Hariyanto</div></div></td>
+                  <td>VII-4</td>
+                  <td><div class="att-status"><span class="status-chip" onclick="selectChip(this)" data-status="H">H</span><span class="status-chip" onclick="selectChip(this)" data-status="I">I</span><span class="status-chip" onclick="selectChip(this)" data-status="S">S</span><span class="status-chip selected" onclick="selectChip(this)" data-status="A">A</span></div></td>
+                  <td><input class="form-control" type="text" placeholder="Catatan..." style="width:160px;font-size:0.82rem;"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+          <footer class="page-footer">SMPITDM EKS — Sistem Manajemen Ekstrakurikuler · Created by <strong>Pak Aziz Ms</strong></footer>
+</div>
+  </div>
+
+  <div class="modal-overlay" id="saveConfirm">
+    <div class="modal sm">
+      <div class="modal-header">
+        <span class="modal-title">Simpan Absensi</span>
+        <button class="modal-close" data-icon="x" aria-label="Tutup"></button>
+      </div>
+      <div class="modal-body">
+        <p>Anda akan menyimpan absensi untuk <strong>5 siswa</strong>.</p>
+        <p class="mt-4 text-sm muted">Pastikan semua status sudah benar sebelum menyimpan.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('saveConfirm')">Batal</button>
+        <button class="btn btn-primary">Ya, Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+  <script>
+    function selectChip(el) {
+      const siblings = el.parentElement.querySelectorAll('.status-chip');
+      siblings.forEach(s => s.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+    function markAll(status) {
+      document.querySelectorAll('.status-chip').forEach(chip => chip.classList.remove('selected'));
+      document.querySelectorAll(`.status-chip[data-status="${status}"]`).forEach(chip => chip.classList.add('selected'));
+    }
+  </script>
+</body>
+</html>

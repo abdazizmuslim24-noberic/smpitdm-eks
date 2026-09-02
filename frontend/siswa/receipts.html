@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bukti Pembayaran — SMPITDM EKS</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand"><div class="logo" data-icon="extracurricular"></div><span>SMPITDM EKS</span></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">Utama</div>
+        <a href="dashboard.html" class="nav-link" data-icon="dashboard">Dashboard</a>
+        <div class="nav-section">Ekskul Saya</div>
+        <a href="attendance.html" class="nav-link" data-icon="attendance">Absensi Saya</a>
+        <a href="payments.html" class="nav-link" data-icon="payments">Pembayaran</a>
+        <a href="receipts.html" class="nav-link active" data-icon="receipts">Bukti Pembayaran</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-card"><div class="avatar">SF</div><div class="user-info"><div class="user-name">Siti Fatimah</div><div class="user-role">Siswa Â· VII-1</div></div></div>
+        <a href="../index.html" class="nav-link" style="margin-top:12px;" data-icon="logout">Keluar</a>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="flex items-center gap-3">
+          <button class="icon-btn menu-toggle" id="menuToggle" data-icon="menu" aria-label="Buka menu"></button>
+          <span class="topbar-title">Bukti Pembayaran</span>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-btn" data-icon="bell" aria-label="Notifikasi"></button>
+          <div class="identity"><div class="avatar-sm">SF</div><div><div class="id-name">Siti Fatimah</div><div class="id-sub">Siswa Â· VII-1</div></div></div>
+        </div>
+      </header>
+
+      <main class="content">
+        <div class="receipt">
+          <div class="receipt-header">
+            <h3>SMPIT DARUL MUTTAQIEN</h3>
+            <p style="font-size:0.9rem;color:var(--muted-foreground);">BUKTI PEMBAYARAN EKSTRAKURIKULER</p>
+          </div>
+
+          <div style="margin-bottom:16px;">
+            <div class="receipt-row"><span class="k">No Transaksi</span><span style="font-weight:600;">TRX-2026090004</span></div>
+          </div>
+
+          <div style="margin-bottom:20px;">
+            <div class="receipt-row"><span class="k">Nama Siswa</span><span style="font-weight:600;">Siti Fatimah</span></div>
+            <div class="receipt-row"><span class="k">NIS</span><span>20260145</span></div>
+            <div class="receipt-row"><span class="k">Kelas</span><span>VII-1</span></div>
+          </div>
+
+          <div style="margin-bottom:20px;">
+            <div class="receipt-row"><span class="k">Ekstrakurikuler</span><span style="font-weight:600;">Futsal</span></div>
+            <div class="receipt-row"><span class="k">Periode</span><span>Sep 2026</span></div>
+          </div>
+
+          <div style="margin-bottom:20px;">
+            <div class="receipt-row"><span class="k">Tanggal Bayar</span><span>01 September 2026</span></div>
+            <div class="receipt-row"><span class="k">Nominal</span><span style="font-weight:700;font-size:1.05rem;">Rp 50.000</span></div>
+            <div class="receipt-row"><span class="k">Metode</span><span>Transfer</span></div>
+            <div class="receipt-row"><span class="k">Status</span><span class="badge badge-success">LUNAS</span></div>
+          </div>
+
+          <div style="padding-top:12px;border-top:2px solid var(--foreground);margin-top:12px;">
+            <div class="receipt-row"><span class="k">Diverifikasi Oleh</span><span style="font-weight:600;">Ahmad Fauzi, S.Pd.</span></div>
+            <div class="receipt-row"><span class="k">Peran</span><span>PJ/Guru Ekskul</span></div>
+            <div class="receipt-row"><span class="k">Tanggal Verifikasi</span><span>02 September 2026 - 15:42</span></div>
+          </div>
+        </div>
+
+        <div style="max-width:460px;margin:20px auto 0;text-align:center;">
+          <button class="btn btn-primary" data-icon="printer" onclick="window.print()">Cetak / Simpan PDF</button>
+          <a href="payments.html" class="btn btn-outline" style="margin-left:8px;">Kembali</a>
+        </div>
+      </main>
+          <footer class="page-footer">SMPITDM EKS — Sistem Manajemen Ekstrakurikuler · Created by <strong>Pak Aziz Ms</strong></footer>
+</div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+</html>

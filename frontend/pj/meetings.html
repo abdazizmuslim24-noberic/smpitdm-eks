@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pertemuan — SMPITDM EKS</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand"><div class="logo" data-icon="extracurricular"></div><span>SMPITDM EKS</span></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">Utama</div>
+        <a href="dashboard.html" class="nav-link" data-icon="dashboard">Dashboard</a>
+        <div class="nav-section">Ekskul Saya (Futsal)</div>
+        <a href="meetings.html" class="nav-link active" data-icon="meetings">Pertemuan</a>
+        <a href="attendance.html" class="nav-link" data-icon="attendance">Absensi</a>
+        <a href="payments.html" class="nav-link" data-icon="payments">Pembayaran</a>
+        <a href="reports.html" class="nav-link" data-icon="reports">Laporan &amp; Rekap</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-card"><div class="avatar">AF</div><div class="user-info"><div class="user-name">Ahmad Fauzi, S.Pd.</div><div class="user-role">PJ â€” Futsal</div></div></div>
+        <a href="../index.html" class="nav-link" style="margin-top:12px;" data-icon="logout">Keluar</a>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="flex items-center gap-3">
+          <button class="icon-btn menu-toggle" id="menuToggle" data-icon="menu" aria-label="Buka menu"></button>
+          <span class="topbar-title">Pertemuan â€” Futsal</span>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-btn" data-icon="bell" aria-label="Notifikasi"></button>
+          <div class="identity"><div class="avatar-sm">AF</div><div><div class="id-name">Ahmad Fauzi, S.Pd.</div><div class="id-sub">PJ â€” Futsal</div></div></div>
+        </div>
+      </header>
+
+      <main class="content">
+        <div class="toolbar mb-6">
+          <div class="search-box">
+            <span class="search-icon" data-icon="search"></span>
+            <input class="form-control" type="text" placeholder="Cari pertemuan / materi...">
+          </div>
+          <button class="btn btn-primary" onclick="openModal('meetingModal')" data-icon="plus">Buat Pertemuan</button>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr><th>Tanggal</th><th>Waktu</th><th>Materi / Topik</th><th>Tempat</th><th>Status</th><th style="text-align:right;">Aksi</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>11 Sep 2026</td><td>15:30 - 17:00</td>
+                  <td><div class="id-name">Teknik Goal Keeping</div></td>
+                  <td>Lapangan</td>
+                  <td><span class="badge badge-info badge-dot">Dijadwalkan</span></td>
+                  <td><div class="actions"><button class="btn btn-outline btn-sm" data-icon="edit" onclick="openModal('meetingModal')">Edit</button><button class="btn btn-outline btn-sm" data-icon="trash">Hapus</button></div></td>
+                </tr>
+                <tr>
+                  <td>04 Sep 2026</td><td>15:30 - 17:00</td>
+                  <td><div class="id-name">Passing &amp; Shooting</div></td>
+                  <td>Lapangan Utama</td>
+                  <td><span class="badge badge-success badge-dot">Selesai</span></td>
+                  <td><div class="actions"><button class="btn btn-outline btn-sm" data-icon="edit" onclick="openModal('meetingModal')">Edit</button><button class="btn btn-outline btn-sm" data-icon="trash">Hapus</button></div></td>
+                </tr>
+                <tr>
+                  <td>28 Ags 2026</td><td>15:30 - 17:00</td>
+                  <td><div class="id-name">Teknik Dribbling Lanjut</div></td>
+                  <td>Lapangan Utama</td>
+                  <td><span class="badge badge-success badge-dot">Selesai</span></td>
+                  <td><div class="actions"><button class="btn btn-outline btn-sm" data-icon="edit" onclick="openModal('meetingModal')">Edit</button><button class="btn btn-outline btn-sm" data-icon="trash">Hapus</button></div></td>
+                </tr>
+                <tr>
+                  <td>21 Ags 2026</td><td>15:30 - 17:00</td>
+                  <td><div class="id-name">Game Internal</div></td>
+                  <td>Lapangan Utama</td>
+                  <td><span class="badge badge-success badge-dot">Selesai</span></td>
+                  <td><div class="actions"><button class="btn btn-outline btn-sm" data-icon="edit" onclick="openModal('meetingModal')">Edit</button><button class="btn btn-outline btn-sm" data-icon="trash">Hapus</button></div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination">
+            <button class="page-btn" disabled>&laquo;</button>
+            <button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">&raquo;</button>
+          </div>
+        </div>
+      </main>
+          <footer class="page-footer">SMPITDM EKS — Sistem Manajemen Ekstrakurikuler · Created by <strong>Pak Aziz Ms</strong></footer>
+</div>
+  </div>
+
+  <div class="modal-overlay" id="meetingModal">
+    <div class="modal lg">
+      <div class="modal-header">
+        <span class="modal-title">Buat Pertemuan Baru</span>
+        <button class="modal-close" data-icon="x" aria-label="Tutup"></button>
+      </div>
+      <div class="modal-body">
+        <form class="form-grid">
+          <div class="form-group"><label class="form-label">Tanggal <span class="req">*</span></label><input class="form-control" type="date"></div>
+          <div class="form-group"><label class="form-label">Jam Mulai <span class="req">*</span></label><input class="form-control" type="time" value="15:30"></div>
+          <div class="form-group"><label class="form-label">Jam Selesai</label><input class="form-control" type="time" value="17:00"></div>
+          <div class="form-group"><label class="form-label">Status</label><select class="form-control"><option>Dijadwalkan</option><option>Berlangsung</option><option>Selesai</option><option>Dibatalkan</option></select></div>
+          <div class="form-group full"><label class="form-label">Materi / Topik <span class="req">*</span></label><input class="form-control" type="text" placeholder="e.g. Passing dan Shooting"></div>
+          <div class="form-group full"><label class="form-label">Tempat</label><input class="form-control" type="text" placeholder="Lapangan Utama"></div>
+          <div class="form-group full"><label class="form-label">Catatan</label><textarea class="form-control" placeholder="Catatan tambahan untuk pertemuan ini"></textarea></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('meetingModal')">Batal</button>
+        <button class="btn btn-primary">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+</html>

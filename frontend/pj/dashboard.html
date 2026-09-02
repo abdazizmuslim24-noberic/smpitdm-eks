@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard PJ/Guru — SMPITDM EKS</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand"><div class="logo" data-icon="extracurricular"></div><span>SMPITDM EKS</span></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">Utama</div>
+        <a href="dashboard.html" class="nav-link active" data-icon="dashboard">Dashboard</a>
+        <div class="nav-section">Ekskul Saya (Futsal)</div>
+        <a href="meetings.html" class="nav-link" data-icon="meetings">Pertemuan</a>
+        <a href="attendance.html" class="nav-link" data-icon="attendance">Absensi</a>
+        <a href="payments.html" class="nav-link" data-icon="payments">Pembayaran</a>
+        <a href="reports.html" class="nav-link" data-icon="reports">Laporan &amp; Rekap</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-card"><div class="avatar">AF</div><div class="user-info"><div class="user-name">Ahmad Fauzi, S.Pd.</div><div class="user-role">PJ â€” Futsal</div></div></div>
+        <a href="../index.html" class="nav-link" style="margin-top:12px;" data-icon="logout">Keluar</a>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="flex items-center gap-3">
+          <button class="icon-btn menu-toggle" id="menuToggle" data-icon="menu" aria-label="Buka menu"></button>
+          <span class="topbar-title">Dashboard â€” Futsal</span>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-btn" data-icon="bell" aria-label="Notifikasi"></button>
+          <div class="identity"><div class="avatar-sm">AF</div><div><div class="id-name">Ahmad Fauzi, S.Pd.</div><div class="id-sub">PJ â€” Futsal</div></div></div>
+        </div>
+      </header>
+
+      <main class="content">
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon bg-indigo" data-icon="students"></div>
+            <div><div class="stat-label">Total Anggota</div><div class="stat-value">98</div><div class="stat-trend trend-up">+5 bulan ini</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon bg-sky" data-icon="meetings"></div>
+            <div><div class="stat-label">Pertemuan Bulan Ini</div><div class="stat-value">4</div><div class="stat-trend">terjadwal</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon bg-green" data-icon="attendance"></div>
+            <div><div class="stat-label">Rata-rata Kehadiran</div><div class="stat-value">94%</div><div class="stat-trend trend-up">+2% vs bulan lalu</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon bg-warning" data-icon="payments"></div>
+            <div><div class="stat-label">Menunggu Verifikasi</div><div class="stat-value">7</div><div class="stat-trend trend-down">perlu tindakan</div></div>
+          </div>
+        </div>
+
+        <!-- Pertemuan terakhir -->
+        <div class="grid-2 mt-6">
+          <div class="card">
+            <div class="card-header">
+              <div><div class="card-title">Pertemuan Terakhir</div><div class="card-subtitle">Absensi per pertemuan</div></div>
+            </div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <div class="flex justify-between items-center">
+                  <div><div class="id-name">Pertemuan #8</div><div class="text-xs muted">Kamis, 28 Ags 2026 Â· Passing &amp; Shooting</div></div>
+                  <div class="text-right"><div class="text-sm" style="font-weight:600;color:var(--success);">92% hadir</div><div class="text-xs muted">90/98 anggota</div></div>
+                </div>
+                <div class="flex justify-between items-center">
+                  <div><div class="id-name">Pertemuan #7</div><div class="text-xs muted">Kamis, 21 Ags 2026 Â· Dribbling</div></div>
+                  <div class="text-right"><div class="text-sm" style="font-weight:600;color:var(--success);">96% hadir</div><div class="text-xs muted">94/98 anggota</div></div>
+                </div>
+                <div class="flex justify-between items-center">
+                  <div><div class="id-name">Pertemuan #6</div><div class="text-xs muted">Kamis, 14 Ags 2026 Â· Game Internal</div></div>
+                  <div class="text-right"><div class="text-sm" style="font-weight:600;">88% hadir</div><div class="text-xs muted">86/98 anggota</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div><div class="card-title">Pembayaran Menunggu</div><div class="card-subtitle">7 transaksi perlu verifikasi</div></div>
+              <a href="payments.html" class="btn btn-ghost btn-sm">Lihat semua</a>
+            </div>
+            <div class="table-wrap">
+              <table class="table">
+                <thead><tr><th>Siswa</th><th>Nominal</th><th>Aksi</th></tr></thead>
+                <tbody>
+                  <tr><td><div class="id-name">Ahmad Fauzan</div></td><td>Rp 50.000</td><td><div class="actions"><button class="btn btn-outline btn-sm">Verifikasi</button></div></td></tr>
+                  <tr><td><div class="id-name">Gilang Ramadhan</div></td><td>Rp 50.000</td><td><div class="actions"><button class="btn btn-outline btn-sm">Verifikasi</button></div></td></tr>
+                  <tr><td><div class="id-name">Faisal Rahman</div></td><td>Rp 50.000</td><td><div class="actions"><button class="btn btn-outline btn-sm">Verifikasi</button></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+          <footer class="page-footer">SMPITDM EKS — Sistem Manajemen Ekstrakurikuler · Created by <strong>Pak Aziz Ms</strong></footer>
+</div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laporan & Rekap — SMPITDM EKS</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand"><div class="logo" data-icon="extracurricular"></div><span>SMPITDM EKS</span></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">Utama</div>
+        <a href="dashboard.html" class="nav-link" data-icon="dashboard">Dashboard</a>
+        <div class="nav-section">Data Master</div>
+        <a href="users.html" class="nav-link" data-icon="users">Pengguna</a>
+        <a href="students.html" class="nav-link" data-icon="students">Data Siswa</a>
+        <a href="extracurriculars.html" class="nav-link" data-icon="extracurricular">Ekstrakurikuler</a>
+        <a href="memberships.html" class="nav-link" data-icon="memberships">Keanggotaan</a>
+        <div class="nav-section">Operasional</div>
+        <a href="payments.html" class="nav-link" data-icon="payments">Pembayaran</a>
+        <a href="reports.html" class="nav-link active" data-icon="reports">Laporan &amp; Rekap</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-card"><div class="avatar">AD</div><div class="user-info"><div class="user-name">Dewi Anggraini</div><div class="user-role">Administrator</div></div></div>
+        <a href="../index.html" class="nav-link" style="margin-top:12px;" data-icon="logout">Keluar</a>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="flex items-center gap-3">
+          <button class="icon-btn menu-toggle" id="menuToggle" data-icon="menu" aria-label="Buka menu"></button>
+          <span class="topbar-title">Laporan &amp; Rekap</span>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-btn" data-icon="bell" aria-label="Notifikasi"></button>
+          <div class="identity"><div class="avatar-sm">AD</div><div><div class="id-name">Dewi Anggraini</div><div class="id-sub">Administrator</div></div></div>
+        </div>
+      </header>
+
+      <main class="content">
+        <!-- Filter bar -->
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Filter Laporan</div></div>
+          </div>
+          <div class="card-body">
+            <form class="form-grid">
+              <div class="form-group"><label class="form-label">Ekstrakurikuler</label><select class="form-control"><option>Semua Ekskul</option><option>Futsal</option><option>Basket</option><option>Pramuka</option><option>Tahfidz</option></select></div>
+              <div class="form-group"><label class="form-label">Tipe Laporan</label><select class="form-control"><option>Rekap Mingguan</option><option>Rekap Bulanan</option></select></div>
+              <div class="form-group"><label class="form-label">Periode Mulai</label><input class="form-control" type="date" value="2026-09-01"></div>
+              <div class="form-group"><label class="form-label">Periode Akhir</label><input class="form-control" type="date" value="2026-09-30"></div>
+              <div class="form-group full">
+                <div class="flex gap-3">
+                  <button type="button" class="btn btn-primary">Tampilkan</button>
+                  <button type="button" class="btn btn-outline" data-icon="download">Export XLSX</button>
+                  <button type="button" class="btn btn-outline" data-icon="printer">Export PDF</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Rekap Bulanan -->
+        <div class="card mt-6">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Rekap Kehadiran â€” Futsal Â· September 2026</div>
+              <div class="card-subtitle">Periode: 01 Sep - 30 Sep 2026 Â· 4 pertemuan</div>
+            </div>
+            <div class="flex gap-3">
+              <button class="btn btn-outline btn-sm" data-icon="download">XLSX</button>
+              <button class="btn btn-outline btn-sm" data-icon="printer">PDF</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr><th>No</th><th>NIS</th><th>Nama</th><th>Kelas</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alpa</th><th>Total</th><th>Persentase</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td>20260123</td><td><div class="id-name">Ahmad Fauzan</div></td><td>VIII-2</td><td>4</td><td>0</td><td>0</td><td>0</td><td>4</td><td><div class="flex items-center gap-3"><div class="progress" style="width:80px;"><div class="progress-bar success" style="width:100%;"></div></div><span class="text-sm" style="color:var(--success);font-weight:600;">100%</span></div></td></tr>
+                <tr><td>2</td><td>20260211</td><td><div class="id-name">Eko Hariyanto</div></td><td>VII-4</td><td>3</td><td>0</td><td>0</td><td>1</td><td>4</td><td><div class="flex items-center gap-3"><div class="progress" style="width:80px;"><div class="progress-bar" style="width:75%;"></div></div><span class="text-sm" style="font-weight:600;">75%</span></div></td></tr>
+                <tr><td>3</td><td>20260250</td><td><div class="id-name">Faisal Rahman</div></td><td>IX-1</td><td>4</td><td>0</td><td>0</td><td>0</td><td>4</td><td><div class="flex items-center gap-3"><div class="progress" style="width:80px;"><div class="progress-bar success" style="width:100%;"></div></div><span class="text-sm" style="color:var(--success);font-weight:600;">100%</span></div></td></tr>
+                <tr><td>4</td><td>20260268</td><td><div class="id-name">Gilang Ramadhan</div></td><td>VIII-3</td><td>2</td><td>1</td><td>0</td><td>1</td><td>4</td><td><div class="flex items-center gap-3"><div class="progress" style="width:80px;"><div class="progress-bar warning" style="width:50%;"></div></div><span class="text-sm" style="font-weight:600;">50%</span></div></td></tr>
+                <tr><td>5</td><td>20260290</td><td><div class="id-name">Hasan Basri</div></td><td>VII-2</td><td>4</td><td>0</td><td>0</td><td>0</td><td>4</td><td><div class="flex items-center gap-3"><div class="progress" style="width:80px;"><div class="progress-bar success" style="width:100%;"></div></div><span class="text-sm" style="color:var(--success);font-weight:600;">100%</span></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+          <footer class="page-footer">SMPITDM EKS — Sistem Manajemen Ekstrakurikuler · Created by <strong>Pak Aziz Ms</strong></footer>
+</div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+</html>

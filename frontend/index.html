@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Masuk — SMPITDM EKS</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="login-page">
+    <!-- Left panel (brand) -->
+    <div class="login-left">
+      <h1>Sistem Manajemen<br>Ekstrakurikuler Sekolah</h1>
+      <p>Kelola kegiatan, absensi, rekap, dan pembayaran ekstrakurikuler secara terpusat untuk Admin, PJ/Guru, dan Siswa.</p>
+
+      <div class="login-features">
+        <div class="feat">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Absensi pertemuan mingguan dengan anti-duplikasi
+        </div>
+        <div class="feat">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M17 9l-5 5-3-3-4 4"/></svg>
+          Rekap mingguan &amp; bulanan dengan export XLSX &amp; PDF
+        </div>
+        <div class="feat">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+          Pembayaran ekskul, verifikasi Admin/PJ, dan bukti PDF
+        </div>
+        <div class="feat">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Kontrol akses ketat berbasis peran (RBAC)
+        </div>
+      </div>
+    </div>
+
+    <!-- Right panel (form) -->
+    <div class="login-right">
+      <div class="login-header">
+        <div class="brand-mark">EKS</div>
+        <h2>Masuk ke akun Anda</h2>
+        <p class="login-sub">Silakan masuk dengan akun yang telah terdaftar.</p>
+      </div>
+
+      <div class="demo-roles">
+        <button type="button" class="demo-role" data-email="admin@example.com" data-role="ADMIN">
+          <div class="demo-label">Admin</div>
+          <div class="demo-mail">admin@example.com</div>
+        </button>
+        <button type="button" class="demo-role" data-email="guru1@example.com" data-role="PJ_GURU">
+          <div class="demo-label">PJ/Guru</div>
+          <div class="demo-mail">guru1@example.com</div>
+        </button>
+        <button type="button" class="demo-role" data-email="siswa1@example.com" data-role="SISWA">
+          <div class="demo-label">Siswa</div>
+          <div class="demo-mail">siswa1@example.com</div>
+        </button>
+      </div>
+
+      <form class="login-form" id="loginForm">
+        <div class="form-group">
+          <label class="form-label" for="email">Email</label>
+          <input class="form-control" type="email" id="email" name="email" placeholder="nama@sekolah.sch.id" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="password">Kata Sandi</label>
+          <input class="form-control" type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+
+        <div class="flex justify-between items-center" style="margin-top:2px;">
+          <label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:var(--muted-foreground);cursor:pointer;">
+            <input type="checkbox" style="width:15px;height:15px;accent-color:var(--primary);"> Ingat saya
+          </label>
+          <a href="#" style="font-size:0.85rem;">Lupa kata sandi?</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg w-full" style="margin-top:8px;">Masuk</button>
+      </form>
+
+      <p class="text-sm muted" style="margin-top:20px;text-align:center;font-size:0.78rem;">
+        Bertemu masalah? Hubungi administrator sekolah.
+      </p>
+      <p class="text-sm muted" style="margin-top:24px;text-align:center;font-size:0.78rem;border-top:1px solid var(--border);padding-top:16px;">
+        SMPITDM EKS — Sistem Manajemen Ekstrakurikuler · Created by <strong style="color:var(--card-foreground);font-weight:600;">Pak Aziz Ms</strong>
+      </p>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    // Demo: klik role → isi email, redirect sesuai role
+    document.querySelectorAll('.demo-role').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const email = btn.dataset.email;
+        const role = btn.dataset.role;
+        document.getElementById('email').value = email;
+        document.getElementById('password').value = 'password123';
+
+        const to = role === 'ADMIN' ? 'admin/dashboard.html'
+                 : role === 'PJ_GURU' ? 'pj/dashboard.html'
+                 : 'siswa/dashboard.html';
+        location.href = to;
+      });
+    });
+
+    // Submit form → redirect berdasarkan email (demo saja)
+    document.getElementById('loginForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      if (email.startsWith('admin')) location.href = 'admin/dashboard.html';
+      else if (email.startsWith('guru')) location.href = 'pj/dashboard.html';
+      else if (email.startsWith('siswa')) location.href = 'siswa/dashboard.html';
+      else {
+        alert('Akun demo: admin@example.com, guru1@example.com, siswa1@example.com');
+      }
+    });
+  </script>
+</body>
+</html>
