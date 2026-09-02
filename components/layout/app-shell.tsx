@@ -1,10 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { LogOut, ShieldCheck } from "lucide-react";
+import { LogOut, ShieldCheck, Menu, X } from "lucide-react";
 import { resolveIcon, type IconName } from "@/lib/icons";
 
 export type { IconName };
@@ -115,15 +116,16 @@ export function AppShell({ brand, user, navGroups, children }: AppShellProps) {
           </div>
           <span className="font-heading font-bold">{brand}</span>
         </div>
-        {/* nav fallback: show top links inline */}
-        <MobileNav navGroups={navGroups} />
-        <button
-          className="rounded-md p-1.5 text-muted-foreground hover:bg-muted"
-          onClick={handleLogout}
-          aria-label="Keluar"
-        >
-          <LogOut className="h-5 w-5" />
-        </button>
+        <div className="flex items-center gap-1">
+          <MobileNav navGroups={navGroups} />
+          <button
+            className="rounded-md p-1.5 text-muted-foreground hover:bg-muted"
+            onClick={handleLogout}
+            aria-label="Keluar"
+          >
+            <LogOut className="h-5 w-5" />
+          </button>
+        </div>
       </div>
 
       {/* Main */}
@@ -153,31 +155,61 @@ function currentTitle(pathname: string, groups: { items: NavItem[] }[]): string 
   return "Dashboard";
 }
 
-function MobileNav({ navGroups }: { navGroups: { items: NavItem[] }[] }) {
+function MobileNav({ navGroups }: { navGroups: AppShellProps["navGroups"] }) {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
   return (
-    <div className="flex flex-1 items-center gap-1 overflow-x-auto px-2">
-      {navGroups.flatMap((g) =>
-        g.items.map((item) => {
-          const Icon = resolveIcon(item.icon);
-          const active = pathname === item.href;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium",
-                active
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted"
-              )}
-            >
-              <Icon className="h-4 w-4" />
-              {item.title}
-            </Link>
-          );
-        })
+    <>
+      <button
+        className="rounded-md p-1.5 text-muted-foreground hover:bg-muted"
+        onClick={() => setOpen(!open)}
+        aria-label="Menu"
+      >
+        {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+      </button>
+      {open && (
+        <>
+          <div
+            className="fixed inset-0 z-40 bg-black/40"
+            onClick={() => setOpen(false)}
+          />
+          <div className="fixed inset-x-0 top-14 z-50 border-b bg-background p-3 shadow-lg">
+            <nav className="scrollbar-hide max-h-[60vh] space-y-4 overflow-y-auto">
+              {navGroups.map((group) => (
+                <div key={group.label}>
+                  <div className="mb-1 px-3 text-[11px] font-semibold uppercase text-muted-foreground">
+                    {group.label}
+                  </div>
+                  <div className="space-y-0.5">
+                    {group.items.map((item) => {
+                      const Icon = resolveIcon(item.icon);
+                      const active =
+                        pathname === item.href ||
+                        pathname.startsWith(item.href + "/");
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setOpen(false)}
+                          className={cn(
+                            "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium",
+                            active
+                              ? "bg-primary text-primary-foreground"
+                              : "text-muted-foreground hover:bg-muted"
+                          )}
+                        >
+                          {Icon && <Icon className="h-4 w-4" />}
+                          {item.title}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </nav>
+          </div>
+        </>
       )}
-    </div>
+    </>
   );
 }

@@ -72,6 +72,7 @@ export function UserFormDialog({ user }: { user?: UserInput | null }) {
       setOpen(false);
       if (!isEdit) setForm({ name: "", email: "", password: "", role: "PJ_GURU" });
       router.refresh();
+      setLoading(false);
     } catch {
       setError("Terjadi kesalahan jaringan.");
       setLoading(false);
