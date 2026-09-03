@@ -20,6 +20,7 @@ interface Option {
   id: string;
   name: string;
   nis?: string;
+  className?: string | null;
 }
 
 export interface MembershipInput {
@@ -41,6 +42,7 @@ export function MembershipFormDialog({
   const [error, setError] = useState<string | null>(null);
   const [students, setStudents] = useState<Option[]>([]);
   const [ekskuls, setEkskuls] = useState<Option[]>([]);
+  const [classFilter, setClassFilter] = useState("");
   const [studentId, setStudentId] = useState(membership?.studentId ?? "");
   const [extracurricularId, setExtracurricularId] = useState(
     membership?.extracurricularId ?? ""
@@ -62,6 +64,19 @@ export function MembershipFormDialog({
         .catch(() => {});
     }
   }, [open, studentId, extracurricularId]);
+
+  const classOptions = Array.from(
+    new Set(
+      students
+        .map((s) => s.className)
+        .filter((c): c is string => Boolean(c))
+        .sort()
+    )
+  );
+
+  const filteredStudents = classFilter
+    ? students.filter((s) => s.className === classFilter)
+    : students;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -115,13 +130,36 @@ export function MembershipFormDialog({
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {classOptions.length > 0 && (
+            <div className="space-y-2">
+              <Label htmlFor="classFilter">Filter Kelas</Label>
+              <Select
+                id="classFilter"
+                value={classFilter}
+                onChange={(e) => {
+                  setClassFilter(e.target.value);
+                  setStudentId("");
+                }}
+              >
+                <option value="">Semua Kelas</option>
+                {classOptions.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </Select>
+            </div>
+          )}
           <div className="space-y-2">
             <Label htmlFor="student">Siswa</Label>
             <Select id="student" value={studentId} onChange={(e) => setStudentId(e.target.value)} required>
-              {students.length === 0 && <option value="">Tidak ada siswa aktif</option>}
-              {students.map((s) => (
+              {filteredStudents.length === 0 && (
+                <option value="">Tidak ada siswa aktif</option>
+              )}
+              {filteredStudents.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.name} ({s.nis})
+                  {s.className ? ` — ${s.className}` : ""}
                 </option>
               ))}
             </Select>

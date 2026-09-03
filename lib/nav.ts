@@ -63,6 +63,7 @@ const pjNav: NavGroup[] = [
     label: "Operasional",
     items: [
       { title: "Pertemuan", href: "/pj/meetings", icon: "CalendarDays" },
+      { title: "Keanggotaan", href: "/pj/memberships", icon: "UserPlus" },
       { title: "Absensi", href: "/pj/attendance", icon: "ClipboardCheck" },
     ],
   },
