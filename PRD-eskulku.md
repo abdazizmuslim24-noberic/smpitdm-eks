@@ -421,8 +421,8 @@ Admin mengatur info rekening/QR melalui form ekstrakurikuler:
 
 - Field teks: Nama Bank, No. Rekening, A.N. Pemilik
 - Field file: Upload QR Code (JPG/PNG, maks 5MB, validasi MIME server-side)
-- Preview QR saat edit; tombol "Hapus QR" untuk menghapus file + kolom DB
-- File QR disimpan di `public/uploads/` dengan nama UUID-safe
+- Preview QR saat edit; tombol "Hapus QR" untuk menghapus file + set kolom DB ke NULL
+- **Penyimpanan file: base64 data URI langsung di kolom PostgreSQL** (`qr_code_url` = `data:<mime>;base64,...`) — GRATIS, tanpa filesystem/Vercel Blob/R2/Supabase (tidak bisa di Vercel serverless read-only)
 
 ### Pengaturan Bank/QR oleh PJ/Guru
 
@@ -964,10 +964,9 @@ Validasi:
 
 - MIME type
 - ukuran file
-- nama file aman
 - akses file tidak boleh publik secara tidak terkendali
 
-Untuk MVP, storage dapat menggunakan storage gratis dari provider yang dipilih atau object storage yang kompatibel.
+**Penyimpanan (GRATIS, serverless-friendly):** file di-encode sebagai **base64 data URI** dan disimpan langsung di kolom PostgreSQL (`data:<mime>;base64,...`). Tanpa filesystem, tanpa object storage (Vercel Blob/R2/Supabase = berbayar / tidak gratis). Karena disimpan di DB, ukuran file dibatasi maks 5MB agar tidak membebani kolom text.
 
 ---
 
@@ -1317,7 +1316,7 @@ EXTRACURRICULAR
    ├─ bank_name
    ├─ bank_account_number
    ├─ bank_account_holder
-   └─ qr_code_url    ← file di public/uploads/
+   └─ qr_code_url    ← base64 data URI (data:image/...;base64,...) di kolom DB
 ```
 
 ---
@@ -1485,8 +1484,8 @@ eskulku/
 │
 ├── public/
 │   ├── logo-sekolah.png                   ← school emblem
-│   ├── qr-bca.jpeg                        ← BCA QR code image
-│   └── uploads/                           ← user-uploaded files
+│   ├── qr-bca.jpeg                        ← BCA QR code image (seed)
+│   └── uploads/                           ← TIDAK DIPAKAI (base64 disimpan di DB)
 │
 ├── drizzle.config.ts
 ├── package.json
@@ -1635,7 +1634,7 @@ Endpoint wajib melakukan ownership check untuk PJ/Guru.
 16. QR code bersifat opsional — jika tidak ada, tampilkan hanya nomor rekening.
 17. Siswa melihat info bank/QR per ekskul di halaman pembayaran dan saat memilih ekskul di dialog bayar.
 18. Receipt PDF mencantumkan baris "Dibayar Melalui" (bank, no rek, a.n.) jika info bank tersedia.
-19. File upload QR: `image/jpeg`, `image/png`, maks 5MB, validasi MIME server-side, nama file UUID-safe.
+19. File upload QR: `image/jpeg`, `image/png`, maks 5MB, validasi MIME server-side, disimpan sebagai base64 data URI di kolom DB.
 
 ---
 
@@ -2180,11 +2179,10 @@ Sistem harus (kedua jenis upload):
 - Memvalidasi MIME type.
 - Membatasi ukuran.
 - Menghindari executable upload.
-- Menghasilkan nama file aman (UUID prefix).
 - Tidak mempercayai nama file dari user.
 - Membatasi akses file sesuai ownership.
-- Hapus file lama dari disk saat upload baru atau saat QR dihapus.
-- Simpan file di `public/uploads/`.
+- **Menyimpan file sebagai base64 data URI di kolom PostgreSQL** (`data:<mime>;base64,...`) — bukan ke filesystem/object storage (gratis & serverless-safe).
+- Saat QR diganti/dihapus, cukup timpa/set kolom `qr_code_url` ke NULL (tidak ada file di disk untuk dihapus).
 
 ---
 
