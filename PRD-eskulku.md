@@ -1,13 +1,24 @@
 # PRD — SIM-EKSKUL
 ## Sistem Manajemen Ekstrakurikuler Sekolah Berbasis Web
 
-**Versi:** 1.0  
-**Tanggal:** 1 September 2026  
+**Versi:** 1.1  
+**Tanggal:** 3 September 2026  
 **Status:** Draft siap development  
 **Platform:** Web Responsive  
 **Fokus MVP:** Absensi pertemuan mingguan, rekap, pembayaran manual, verifikasi pembayaran, dan laporan.
 
 ---
+
+> **⚠️ CRITICAL SYNC RULE — WAJIB DIBACA**
+>
+> **`db/schema.ts` adalah single source of truth untuk semua struktur database.**
+>
+> Sebelum membuat migrasi, menambah kolom, atau mengubah schema:
+> 1. Selalu baca `db/schema.ts` terlebih dahulu.
+> 2. Jangan pernah mengandalkan isi PRD ini saja — PRD bisa tertinggal dari kode.
+> 3. Setelah mengubah schema, **wajib update PRD ini** agar tidak ada mismatch.
+> 4. Kolom yang sudah dihapus dari schema (contoh: `nisn` pada `students`) **TIDAK BOLEH** ditambahkan kembali tanpa diskusi.
+> 5. Migration file harus di-generate dari `schema.ts`, bukan ditulis manual.
 
 ## 1. Ringkasan Produk
 
@@ -120,7 +131,7 @@ Administrator sekolah yang memiliki akses penuh terhadap data aplikasi.
 
 ### PJ_GURU
 
-Guru/Pembina/Penanggung Jawab ekstrakurikuler. PJ hanya dapat mengakses data ekskul yang ditugaskan kepadanya.
+Guru/Pembina/Penanggung Jawab ekstrakurikuler. PJ hanya dapat mengakses data ekskul yang ditugaskan kepadanya, termasuk pengaturan info rekening/QR untuk ekskulnya.
 
 ### SISWA
 
@@ -138,6 +149,7 @@ Siswa yang terdaftar sebagai anggota ekstrakurikuler.
 | Kelola Ekskul | ✅ | 👁️ Ekskul sendiri | 👁️ |
 | Assign PJ | ✅ | ❌ | ❌ |
 | Kelola Anggota | ✅ | ✅ Ekskul sendiri | ❌ |
+| Atur Bank/QR Ekskul | ✅ | ✅ Ekskul sendiri | ❌ |
 | Buat Pertemuan | ✅ | ✅ Ekskul sendiri | ❌ |
 | Edit Pertemuan | ✅ | ✅ Ekskul sendiri | ❌ |
 | Hapus Pertemuan | ✅ | ✅ Ekskul sendiri | ❌ |
@@ -153,6 +165,8 @@ Siswa yang terdaftar sebagai anggota ekstrakurikuler.
 | Verifikasi Pembayaran | ✅ | ✅ Ekskul sendiri | ❌ |
 | Menolak Pembayaran | ✅ | ✅ Ekskul sendiri | ❌ |
 | Cetak Bukti Pembayaran | ✅ | ✅ Ekskul sendiri | ✅ Milik sendiri |
+| Lihat Info Bank/QR Ekskul | ✅ | ✅ Ekskul sendiri | ✅ Ekskul diikuti |
+| Download QR Ekskul | ✅ | ✅ Ekskul sendiri | ✅ Ekskul diikuti |
 | Lihat Audit Verifikasi | ✅ | 👁️ Ekskul sendiri | ❌ |
 | Kelola Guru/PJ | ✅ | ❌ | ❌ |
 
@@ -332,16 +346,16 @@ Password tidak boleh disimpan dalam bentuk plaintext.
 Admin dapat melakukan CRUD:
 
 ```text
-NIS
-NISN
+NIS          ← UNIQUE, wajib
 Nama
 Jenis Kelamin
 Kelas
-Email
-Nomor HP
+Phone
 Status
-User ID
+User ID      ← FK ke users.id, nullable
 ```
+
+> **CATATAN:** Kolom `NISN` tidak ada dalam database — sengaja dihapus saat simplifikasi schema. Jangan tambahkan.
 
 Status:
 
@@ -366,18 +380,24 @@ Data:
 
 ```text
 id
-kode
-nama
-deskripsi
-hari
-jam_mulai
-jam_selesai
-tempat
-biaya_bulanan
+code                  ← UNIQUE, wajib (contoh: EKS001)
+name
+description
+day
+start_time
+end_time
+location
+monthly_fee
+bank_name             ← nullable: nama bank untuk pembayaran ekskul ini
+bank_account_number   ← nullable: nomor rekening
+bank_account_holder   ← nullable: nama pemilik rekening
+qr_code_url           ← nullable: URL file QR code (JPG/PNG, maks 5MB)
 status
 created_at
 updated_at
 ```
+
+> **CATATAN:** Kolom `bank_*` dan `qr_code_url` bersifat **per-ekskul** — setiap ekskul bisa punya info rekening/QR yang berbeda. QR bersifat opsional; jika tidak ada, tampilkan hanya nomor rekening.
 
 Contoh:
 
@@ -388,8 +408,39 @@ Hari       : Jumat
 Jam        : 15:30 - 17:00
 Tempat     : Lapangan Sekolah
 Biaya      : Rp50.000
+Bank       : BCA
+No Rek     : 7005936063
+A.N.       : ABDUL AZIZ MUSLIM
+QR Code    : qr-bca.jpeg
 Status     : Aktif
 ```
+
+### Pengaturan Bank/QR oleh Admin
+
+Admin mengatur info rekening/QR melalui form ekstrakurikuler:
+
+- Field teks: Nama Bank, No. Rekening, A.N. Pemilik
+- Field file: Upload QR Code (JPG/PNG, maks 5MB, validasi MIME server-side)
+- Preview QR saat edit; tombol "Hapus QR" untuk menghapus file + kolom DB
+- File QR disimpan di `public/uploads/` dengan nama UUID-safe
+
+### Pengaturan Bank/QR oleh PJ/Guru
+
+PJ dapat mengedit info rekening/QR untuk ekskul yang menjadi tanggung jawabnya:
+
+- Route: `/pj/ekskuls` — halaman Pengaturan Ekskul (server component)
+- Tabel daftar ekskul PJ + info bank/QR saat ini + tombol "Edit Rekening"
+- Dialog edit (`ekskul-payment-dialog.tsx`): field bank + upload QR
+- API: `PUT /api/pj/ekskuls` — RBAC check, FormData, validasi MIME
+- PJ **tidak boleh** mengedit ekskul yang bukan miliknya
+
+### Tampilan Info Pembayaran untuk Siswa
+
+Info rekening/QR per ekskul ditampilkan kepada siswa di:
+
+- Halaman `/siswa/payments`: panel "Petunjuk Pembayaran" — kartu per ekskul (bank, no rek, a.n., QR + download)
+- Dialog "Bayar Iuran": saat pilih ekskul, tampilkan info bank/QR ekskul terpilih secara live
+- API `/api/siswa/my-ekskuls`: mengembalikan `bankName`, `bankAccountNumber`, `bankAccountHolder`, `qrCodeUrl`
 
 ---
 
@@ -744,15 +795,20 @@ DITOLAK
 # 23. Alur Pembayaran
 
 ```text
-Siswa melakukan pembayaran
-        ↓
-Bukti pembayaran
-        ↓
-Siswa upload bukti
-        ↓
+Siswa membuka halaman Pembayaran
+         ↓
+Info Bank/QR per Ekskul ditampilkan
+(Kartu per ekskul: bank, no rek, a.n., QR)
+         ↓
+Siswa klik "Bayar Iuran" → pilih Ekskul
+         ↓
+Info Bank/QR Ekskul terpilih ditampilkan di dialog
+         ↓
+Siswa isi form + upload bukti
+         ↓
 STATUS:
 MENUNGGU_VERIFIKASI
-        ↓
+         ↓
 ┌─────────────────────┐
 │ Admin / PJ Guru     │
 │ melakukan verifikasi│
@@ -764,6 +820,7 @@ MENUNGGU_VERIFIKASI
     │           │
     ↓           ↓
 Bukti PDF    Catatan alasan
+(dengan info bank/QR)
 ```
 
 ---
@@ -789,6 +846,7 @@ Verifikasi pembayaran Futsal
 Menolak pembayaran Futsal
 Melihat bukti pembayaran Futsal
 Mencetak bukti pembayaran Futsal
+Mengatur info bank/QR Futsal
 ```
 
 Tetapi tidak dapat memverifikasi:
@@ -940,6 +998,11 @@ Nominal      : Rp50.000
 Metode       : Transfer
 Status       : LUNAS
 
+Dibayar Melalui:
+Bank         : BCA
+No. Rekening : 7005936063
+A.N.         : ABDUL AZIZ MUSLIM
+
 Diverifikasi:
 Ahmad Fauzi, S.Pd.
 PJ/Guru Ekskul
@@ -949,6 +1012,8 @@ Tanggal Verifikasi:
 
 ========================================
 ```
+
+> Catatan: Bagian "Dibayar Melalui" hanya ditampilkan jika info bank tersedia di ekskul terkait. QR code tidak dicetak di PDF.
 
 ---
 
@@ -1042,15 +1107,17 @@ https://orm.drizzle.team/docs/get-started/postgresql-new
 
 # 32. Struktur Database
 
+> **CRITICAL:** Source of truth = `db/schema.ts`. Selalu cross-check sebelum migrasi.
+
 ## users
 
 ```text
 id
 name
-email
+email               ← UNIQUE
 password_hash
-role
-is_active
+role                ← ADMIN | PJ_GURU | SISWA (default SISWA)
+is_active           ← integer, default 1
 created_at
 updated_at
 ```
@@ -1059,31 +1126,36 @@ updated_at
 
 ```text
 id
-user_id
-nis
-nisn
+user_id             ← FK → users.id (set null on delete), nullable
+nis                 ← UNIQUE, NOT NULL
 name
 gender
 class_name
 phone
-status
+status              ← AKTIF | NONAKTIF | LULUS (default AKTIF)
 created_at
 updated_at
 ```
+
+> **TIDAK ADA KOLUM `nisn`.** Jangan tambahkan — sudah dihapus saat simplifikasi. Students = 10 kolom.
 
 ## extracurriculars
 
 ```text
 id
-code
+code                ← UNIQUE, NOT NULL
 name
 description
 day
 start_time
 end_time
 location
-monthly_fee
-status
+monthly_fee         ← double, default 0
+bank_name           ← nullable: nama bank pembayaran per-ekskul
+bank_account_number ← nullable: nomor rekening
+bank_account_holder ← nullable: nama pemilik rekening
+qr_code_url         ← nullable: path/URL file QR code image
+status              ← AKTIF | NONAKTIF (default AKTIF)
 created_at
 updated_at
 ```
@@ -1092,8 +1164,8 @@ updated_at
 
 ```text
 id
-extracurricular_id
-user_id
+extracurricular_id  ← FK → extracurriculars.id (cascade)
+user_id             ← FK → users.id (cascade)
 created_at
 ```
 
@@ -1107,10 +1179,10 @@ UNIQUE(extracurricular_id, user_id)
 
 ```text
 id
-student_id
-extracurricular_id
+student_id          ← FK → students.id (cascade)
+extracurricular_id  ← FK → extracurriculars.id (cascade)
 joined_at
-status
+status              ← AKTIF | NONAKTIF | KELUAR (default AKTIF)
 created_at
 updated_at
 ```
@@ -1125,13 +1197,13 @@ UNIQUE(student_id, extracurricular_id)
 
 ```text
 id
-extracurricular_id
+extracurricular_id  ← FK → extracurriculars.id (cascade)
 meeting_date
 start_time
 end_time
 topic
 location
-status
+status              ← DIJADWALKAN | BERLANGSUNG | SELESAI | DIBATALKAN
 notes
 created_at
 updated_at
@@ -1141,11 +1213,11 @@ updated_at
 
 ```text
 id
-meeting_id
-student_id
-status
+meeting_id          ← FK → meetings.id (cascade)
+student_id          ← FK → students.id (cascade)
+status              ← H | I | S | A | T (default H)
 notes
-recorded_by
+recorded_by         ← FK → users.id (set null)
 created_at
 updated_at
 ```
@@ -1160,19 +1232,19 @@ UNIQUE(meeting_id, student_id)
 
 ```text
 id
-student_id
-extracurricular_id
+student_id          ← FK → students.id (cascade)
+extracurricular_id  ← FK → extracurriculars.id (cascade)
 period
 payment_date
-amount
-payment_method
+amount              ← double
+payment_method      ← TUNAI | TRANSFER | LAINNYA (default TUNAI)
 reference_number
 proof_file
-status
+status              ← MENUNGGU_VERIFIKASI | LUNAS | DITOLAK
 verification_note
-verified_by
+verified_by         ← FK → users.id (set null)
 verified_at
-created_by
+created_by          ← FK → users.id (set null)
 created_at
 updated_at
 ```
@@ -1181,10 +1253,16 @@ updated_at
 
 ```text
 id
-payment_id
+payment_id          ← FK → payments.id (cascade)
 receipt_number
 file_url
 generated_at
+```
+
+Constraint:
+
+```text
+UNIQUE(payment_id)
 ```
 
 ---
@@ -1227,9 +1305,19 @@ STUDENT
    ↓
 PAYMENT
    ↓
-EXTRACURRICULAR
+EXTRACURRICULAR  ← (includes bank_name, bank_account_number, bank_account_holder, qr_code_url)
    ↓
 VERIFIED_BY USER
+```
+
+Info bank/QR per-ekskul:
+
+```text
+EXTRACURRICULAR
+   ├─ bank_name
+   ├─ bank_account_number
+   ├─ bank_account_holder
+   └─ qr_code_url    ← file di public/uploads/
 ```
 
 ---
@@ -1301,71 +1389,111 @@ Neon PostgreSQL
 # 35. Struktur Folder
 
 ```text
-sim-ekskul/
+eskulku/
 │
 ├── app/
-│   ├── login/
+│   ├── login/page.tsx
+│   ├── icon.png                    ← favicon
+│   ├── layout.tsx
+│   ├── globals.css
 │   │
 │   ├── admin/
-│   │   ├── dashboard/
-│   │   ├── users/
-│   │   ├── students/
-│   │   ├── extracurriculars/
-│   │   ├── memberships/
-│   │   ├── payments/
-│   │   └── reports/
+│   │   ├── dashboard/page.tsx
+│   │   ├── users/page.tsx
+│   │   ├── students/page.tsx
+│   │   ├── extracurriculars/page.tsx
+│   │   ├── meetings/page.tsx
+│   │   ├── attendance/page.tsx
+│   │   ├── payments/page.tsx
+│   │   └── audit/page.tsx
 │   │
 │   ├── pj/
-│   │   ├── dashboard/
-│   │   ├── meetings/
-│   │   ├── attendance/
-│   │   ├── payments/
-│   │   └── reports/
+│   │   ├── dashboard/page.tsx
+│   │   ├── ekskuls/page.tsx           ← NEW: bank/QR settings
+│   │   ├── meetings/page.tsx
+│   │   ├── attendance/page.tsx
+│   │   ├── payments/page.tsx
+│   │   └── reports/page.tsx
 │   │
 │   ├── siswa/
-│   │   ├── dashboard/
-│   │   ├── attendance/
-│   │   ├── payments/
-│   │   └── receipts/
+│   │   ├── dashboard/page.tsx
+│   │   ├── attendance/page.tsx
+│   │   ├── payments/page.tsx          ← includes per-ekskul bank/QR panel
+│   │   └── receipts/page.tsx
 │   │
 │   └── api/
+│       ├── auth/[...nextauth]/route.ts
+│       ├── health/route.ts
+│       ├── admin/
+│       │   ├── users/route.ts
+│       │   ├── students/route.ts
+│       │   ├── extracurriculars/route.ts  ← includes bank/QR FormData
+│       │   ├── meetings/route.ts          ← POST/PUT/DELETE
+│       │   ├── payments/route.ts
+│       │   └── audit/route.ts
+│       ├── pj/
+│       │   ├── dashboard/route.ts
+│       │   ├── ekskuls/route.ts           ← NEW: GET + PUT bank/QR
+│       │   ├── meetings/route.ts
+│       │   └── payments/route.ts
+│       ├── siswa/
+│       │   ├── dashboard/route.ts
+│       │   ├── my-ekskuls/route.ts        ← includes bank fields
+│       │   ├── attendance/route.ts
+│       │   ├── payments/route.ts
+│       │   └── meetings/route.ts
+│       └── export/
+│           ├── attendance/route.ts        ← XLSX + PDF
+│           └── payment/route.ts           ← receipt PDF with bank/QR
 │
 ├── components/
-│   ├── ui/
+│   ├── ui/                                ← shadcn/ui components
+│   ├── layout/
+│   │   ├── app-shell.tsx
+│   │   ├── sidebar-nav.tsx
+│   │   └── brand-logo.tsx                ← reusable logo component
 │   ├── forms/
-│   ├── tables/
-│   └── dashboard/
+│   │   ├── extracurricular-form-dialog.tsx ← includes bank fields + QR upload
+│   │   ├── student-form-dialog.tsx
+│   │   └── meeting-form-dialog.tsx        ← includes edit/delete
+│   ├── features/
+│   │   ├── pj/
+│   │   │   └── ekskul-payment-dialog.tsx  ← NEW: PJ bank/QR edit dialog
+│   │   └── siswa/
+│   │       └── siswa-payment-dialog.tsx   ← includes bank/QR info
+│   ├── dashboard/                         ← stat-card, chart components
+│   └── tables/                            ← data table components
 │
 ├── lib/
-│   ├── auth/
-│   ├── rbac/
+│   ├── auth/                              ← NextAuth config
+│   ├── rbac/                              ← role checking
 │   ├── permissions/
-│   ├── validation/
+│   ├── validation/                        ← Zod schemas
 │   ├── pdf/
-│   └── excel/
+│   │   └── generate-receipt.ts            ← receipt PDF with bank/QR
+│   ├── excel/
+│   ├── nav.ts                             ← nav items per role
+│   ├── icons.ts                           ← Lucide imports
+│   └── utils.ts
 │
 ├── db/
-│   ├── index.ts
-│   ├── schema.ts
+│   ├── schema.ts                          ← DRIZZLE SCHEMA (source of truth)
+│   ├── index.ts                           ← db connection
 │   └── seed.ts
 │
-├── drizzle/
-│   └── migrations/
+├── drizzle/                               ← gitignored
 │
-├── tests/
-│   ├── unit/
-│   ├── integration/
-│   └── e2e/
-│
-├── testsprite/
-│   ├── auth/
-│   ├── rbac/
-│   ├── attendance/
-│   ├── payment/
-│   └── reports/
+├── public/
+│   ├── logo-sekolah.png                   ← school emblem
+│   ├── qr-bca.jpeg                        ← BCA QR code image
+│   └── uploads/                           ← user-uploaded files
 │
 ├── drizzle.config.ts
 ├── package.json
+├── tsconfig.json
+├── tailwind.config.ts
+├── AGENTS.md                              ← agent instructions
+├── PRD-eskulku.md                         ← this file (source of truth)
 └── .env
 ```
 
@@ -1373,103 +1501,104 @@ sim-ekskul/
 
 # 36. API
 
-## Authentication
+> Catatan: Semua route di bawah menggunakan prefix `/api/` kecuali public. Admin routes diawali `/api/admin/`, PJ `/api/pj/`, Siswa `/api/siswa/`.
+
+## Auth
 
 ```http
-POST /api/auth/login
-POST /api/auth/logout
-GET  /api/auth/me
+POST   /api/auth/login
+POST   /api/auth/logout
+GET    /api/auth/me
 ```
 
-## Users
+## Admin — Users
 
 ```http
-GET    /api/users
-POST   /api/users
-GET    /api/users/:id
-PUT    /api/users/:id
-DELETE /api/users/:id
+GET    /api/admin/users
+POST   /api/admin/users
+GET    /api/admin/users?id=...
+PUT    /api/admin/users?id=...
+DELETE /api/admin/users?id=...
 ```
 
-## Students
+## Admin — Students (no NISN field)
 
 ```http
-GET    /api/students
-POST   /api/students
-GET    /api/students/:id
-PUT    /api/students/:id
-DELETE /api/students/:id
+GET    /api/admin/students
+POST   /api/admin/students
+GET    /api/admin/students?id=...
+PUT    /api/admin/students?id=...
+DELETE /api/admin/students?id=...
 ```
 
-## Extracurriculars
+## Admin — Extracurriculars (FormData: bank + QR)
 
 ```http
-GET    /api/extracurriculars
-POST   /api/extracurriculars
-GET    /api/extracurriculars/:id
-PUT    /api/extracurriculars/:id
-DELETE /api/extracurriculars/:id
+GET    /api/admin/extracurriculars
+POST   /api/admin/extracurriculars       ← FormData (bank fields + QR file)
+GET    /api/admin/extracurriculars?id=...
+PUT    /api/admin/extracurriculars?id=... ← FormData (bank fields + QR file)
+DELETE /api/admin/extracurriculars?id=...
 ```
 
-## Memberships
+## Admin — Meetings (POST/PUT/DELETE)
 
 ```http
-GET    /api/memberships
-POST   /api/memberships
-PUT    /api/memberships/:id
-DELETE /api/memberships/:id
+GET    /api/admin/meetings
+POST   /api/admin/meetings
+PUT    /api/admin/meetings?id=...
+DELETE /api/admin/meetings?id=...
 ```
 
-## Meetings
+## Admin — Payments + Audit
 
 ```http
-GET    /api/meetings
-POST   /api/meetings
-GET    /api/meetings/:id
-PUT    /api/meetings/:id
-DELETE /api/meetings/:id
+GET    /api/admin/payments
+POST   /api/admin/payments
+GET    /api/admin/audit
 ```
 
-## Attendance
+## PJ
 
 ```http
-GET  /api/attendance
-POST /api/attendance
-PUT  /api/attendance/:id
+GET    /api/pj/dashboard
+GET    /api/pj/ekskuls                   ← includes bank/QR fields
+PUT    /api/pj/ekskuls?id=...            ← bank/QR config (RBAC per-ekskul, FormData)
+GET    /api/pj/meetings
+POST   /api/pj/meetings
+PUT    /api/pj/meetings?id=...
+DELETE /api/pj/meetings?id=...
+GET    /api/pj/payments
+POST   /api/pj/payments?id=verify        ← verify payment
+POST   /api/pj/payments?id=reject        ← reject payment
 ```
 
-## Reports
+## Siswa
 
 ```http
-GET /api/reports/attendance/weekly
-GET /api/reports/attendance/monthly
+GET    /api/siswa/dashboard
+GET    /api/siswa/my-ekskuls             ← includes bank/QR fields
+GET    /api/siswa/attendance
+GET    /api/siswa/payments
+POST   /api/siswa/payments               ← upload proof
+GET    /api/siswa/meetings
 ```
-
-## Payments
-
-```http
-GET  /api/payments
-POST /api/payments
-GET  /api/payments/:id
-PUT  /api/payments/:id
-```
-
-## Payment verification
-
-```http
-POST /api/payments/:id/verify
-POST /api/payments/:id/reject
-```
-
-Endpoint wajib melakukan ownership check untuk PJ/Guru.
 
 ## Export
 
 ```http
-GET /api/export/attendance/xlsx
-GET /api/export/attendance/pdf
-GET /api/export/payment/pdf
+GET    /api/export/attendance/xlsx
+GET    /api/export/attendance/pdf
+GET    /api/export/payment/pdf           ← receipt PDF with bank/QR info
 ```
+
+## Public
+
+```http
+GET    /api/health
+```
+
+Endpoint wajib melakukan ownership check untuk PJ/Guru.
 
 ---
 
@@ -1500,6 +1629,13 @@ GET /api/export/payment/pdf
 10. Setiap verifikasi menyimpan `verified_by` dan `verified_at`.
 11. Sistem harus mencatat siapa yang membuat transaksi melalui `created_by`.
 12. Nomor transaksi harus unik.
+13. Info bank/QR bersifat per-ekskul — setiap ekskul bisa punya rekening/QR yang berbeda.
+14. Admin mengatur info bank/QR melalui form ekstrakurikuler (termasuk upload QR image).
+15. PJ mengatur info bank/QR ekskul sendiri melalui `/pj/ekskuls`.
+16. QR code bersifat opsional — jika tidak ada, tampilkan hanya nomor rekening.
+17. Siswa melihat info bank/QR per ekskul di halaman pembayaran dan saat memilih ekskul di dialog bayar.
+18. Receipt PDF mencantumkan baris "Dibayar Melalui" (bank, no rek, a.n.) jika info bank tersedia.
+19. File upload QR: `image/jpeg`, `image/png`, maks 5MB, validasi MIME server-side, nama file UUID-safe.
 
 ---
 
@@ -2010,7 +2146,7 @@ Bukan:
 
 # 50. Validasi Upload
 
-File bukti pembayaran:
+## Bukti Pembayaran
 
 ```text
 Allowed:
@@ -2025,14 +2161,30 @@ Maksimal:
 5 MB
 ```
 
-Sistem harus:
+## QR Code Ekskul
+
+```text
+Allowed:
+image/jpeg
+image/png
+```
+
+Maksimal:
+
+```text
+5 MB
+```
+
+Sistem harus (kedua jenis upload):
 
 - Memvalidasi MIME type.
 - Membatasi ukuran.
 - Menghindari executable upload.
-- Menghasilkan nama file aman.
+- Menghasilkan nama file aman (UUID prefix).
 - Tidak mempercayai nama file dari user.
 - Membatasi akses file sesuai ownership.
+- Hapus file lama dari disk saat upload baru atau saat QR dihapus.
+- Simpan file di `public/uploads/`.
 
 ---
 
@@ -2083,16 +2235,19 @@ Database development harus mempunyai seed:
 
 ```text
 admin@example.com
+password: password123
 role: ADMIN
 ```
 
 ## Guru/PJ
 
 ```text
-guru1@example.com
+guru1@example.com    → PJ Futsal
+password: password123
 role: PJ_GURU
 
-guru2@example.com
+guru2@example.com    → PJ Basket
+password: password123
 role: PJ_GURU
 ```
 
@@ -2100,27 +2255,22 @@ role: PJ_GURU
 
 ```text
 siswa1@example.com
+password: password123
 role: SISWA
 
 siswa2@example.com
+password: password123
 role: SISWA
 ```
 
-## Ekskul
+## Ekskul + Info Pembayaran
 
-```text
-Futsal
-Basket
-Pramuka
-Tahfidz
-```
-
-## Contoh
-
-```text
-Guru 1 → Futsal
-Guru 2 → Basket
-```
+| Nama | Kode | Bank | No Rekening | A.N. | QR Code |
+|---|---|---|---|---|---|
+| Futsal | EKS001 | BCA | 7005936063 | ABDUL AZIZ MUSLIM | `public/qr-bca.jpeg` |
+| Basket | EKS002 | BSI | 1234567890 | Siti Rahma | — |
+| Pramuka | EKS003 | — | — | — | — |
+| Tahfidz | EKS004 | — | — | — | — |
 
 Seed harus hanya digunakan untuk development/testing dan password demo tidak digunakan pada production.
 
@@ -2130,47 +2280,59 @@ Seed harus hanya digunakan untuk development/testing dan password demo tidak dig
 
 ## Authentication
 
-- [ ] Admin dapat login.
-- [ ] PJ/Guru dapat login.
-- [ ] Siswa dapat login.
-- [ ] Logout berfungsi.
-- [ ] Protected routes berfungsi.
+- [x] Admin dapat login.
+- [x] PJ/Guru dapat login.
+- [x] Siswa dapat login.
+- [x] Logout berfungsi.
+- [x] Protected routes berfungsi.
 
 ## RBAC
 
-- [ ] Admin dapat mengakses semua data.
-- [ ] PJ hanya dapat mengakses ekskul yang ditugaskan.
-- [ ] PJ dapat memverifikasi pembayaran ekskul sendiri.
-- [ ] PJ tidak dapat memverifikasi pembayaran ekskul lain.
-- [ ] Siswa hanya dapat melihat data miliknya.
+- [x] Admin dapat mengakses semua data.
+- [x] PJ hanya dapat mengakses ekskul yang ditugaskan.
+- [x] PJ dapat memverifikasi pembayaran ekskul sendiri.
+- [x] PJ tidak dapat memverifikasi pembayaran ekskul lain.
+- [x] Siswa hanya dapat melihat data miliknya.
 
 ## Ekskul
 
-- [ ] Admin dapat CRUD ekskul.
-- [ ] Admin dapat assign PJ.
-- [ ] Anggota dapat dikelola.
+- [x] Admin dapat CRUD ekskul.
+- [x] Admin dapat assign PJ.
+- [x] Anggota dapat dikelola.
+- [x] Admin dapat mengatur bank/QR per-ekskul.
+- [x] PJ dapat mengatur bank/QR ekskul sendiri (Pengaturan Ekskul).
 
 ## Absensi
 
-- [ ] PJ dapat membuat pertemuan.
-- [ ] PJ dapat mengisi absensi.
-- [ ] Absensi tidak dapat duplikat.
-- [ ] Rekap mingguan tersedia.
-- [ ] Rekap bulanan tersedia.
-- [ ] XLSX tersedia.
-- [ ] PDF tersedia.
+- [x] PJ dapat membuat pertemuan.
+- [x] PJ dapat mengisi absensi.
+- [x] Absensi tidak dapat duplikat.
+- [x] Rekap mingguan tersedia.
+- [x] Rekap bulanan tersedia.
+- [x] XLSX tersedia.
+- [x] PDF tersedia.
+- [x] Edit & hapus pertemuan tersedia.
 
 ## Pembayaran
 
-- [ ] Pembayaran manual dapat dicatat.
-- [ ] Bukti pembayaran dapat diupload.
-- [ ] Status menunggu tersedia.
-- [ ] Admin dapat memverifikasi.
-- [ ] PJ dapat memverifikasi ekskul sendiri.
-- [ ] PJ tidak dapat memverifikasi ekskul lain.
-- [ ] Pembayaran dapat ditolak dengan alasan.
-- [ ] Audit verifikasi tersimpan.
-- [ ] Bukti pembayaran PDF dapat dibuat setelah LUNAS.
+- [x] Pembayaran manual dapat dicatat.
+- [x] Bukti pembayaran dapat diupload.
+- [x] Status menunggu tersedia.
+- [x] Admin dapat memverifikasi.
+- [x] PJ dapat memverifikasi ekskul sendiri.
+- [x] PJ tidak dapat memverifikasi ekskul lain.
+- [x] Pembayaran dapat ditolak dengan alasan.
+- [x] Audit verifikasi tersimpan.
+- [x] Bukti pembayaran PDF dapat dibuat setelah LUNAS.
+- [x] Info bank/QR per-ekskul ditampilkan ke siswa.
+- [x] Siswa dapat download QR per-ekskul.
+
+## UI/Branding
+
+- [x] Branding "EKSKUL" konsisten (header, sidebar, metadata, footer, receipt).
+- [x] School emblem logo (`logo-sekolah.png`) sebagai app logo.
+- [x] Favicon (`app/icon.png`).
+- [x] QR code di panel petunjuk pembayaran siswa.
 
 ## Testing
 
@@ -2186,7 +2348,7 @@ Seed harus hanya digunakan untuk development/testing dan password demo tidak dig
 
 # 54. Prioritas Development
 
-## Phase 1 — Foundation
+## Phase 1 — Foundation ✅
 
 ```text
 Project setup
@@ -2202,24 +2364,24 @@ Authentication
 RBAC
 ```
 
-## Phase 2 — Master Data
+## Phase 2 — Master Data ✅
 
 ```text
 Users
 ↓
-Students
+Students (tanpa NISN)
 ↓
-Extracurriculars
+Extracurriculars (dengan bank/QR fields)
 ↓
 PJ/Guru
 ↓
 Memberships
 ```
 
-## Phase 3 — Absensi
+## Phase 3 — Absensi ✅
 
 ```text
-Meetings
+Meetings (CRUD dengan edit/delete)
 ↓
 Attendance
 ↓
@@ -2230,14 +2392,14 @@ Weekly Report
 Monthly Report
 ```
 
-## Phase 4 — Export
+## Phase 4 — Export ✅
 
 ```text
 XLSX
-PDF
+PDF (dengan info bank/QR)
 ```
 
-## Phase 5 — Payment
+## Phase 5 — Payment ✅
 
 ```text
 Payment
@@ -2248,10 +2410,16 @@ Verification
 ↓
 Audit
 ↓
-Receipt PDF
+Receipt PDF (dengan info bank/QR)
+↓
+Per-Ekskul Payment Config (Admin + PJ)
+↓
+PJ Settings Page (/pj/ekskuls)
+↓
+Siswa Payment Info Panel (per-ekskul bank/QR)
 ```
 
-## Phase 6 — Testing
+## Phase 6 — Testing ⬜ (Belum dikerjakan)
 
 ```text
 Drizzle Test
@@ -2265,6 +2433,18 @@ Playwright
 TestSprite
 ↓
 Security Test
+```
+
+## Phase 7 — UI Polish ✅
+
+```text
+Branding "EKSKUL" (bukan "EKS")
+↓
+School emblem logo
+↓
+Favicon
+↓
+QR code di petunjuk pembayaran
 ```
 
 ---
@@ -2291,9 +2471,14 @@ MVP dinyatakan selesai jika:
 16. Pembayaran ditolak harus mempunyai catatan.
 17. Audit verifikasi tersimpan.
 18. Bukti pembayaran PDF dapat dicetak setelah status LUNAS.
-19. Drizzle database tests pass.
-20. TestSprite tests pass.
-21. Tidak ditemukan celah authorization kritis pada pengujian MVP.
+19. Info bank/QR per-ekskul ditampilkan ke siswa.
+20. Admin dapat mengatur bank/QR per-ekskul.
+21. PJ dapat mengatur bank/QR ekskul sendiri.
+22. Edit & hapus pertemuan tersedia untuk Admin & PJ.
+23. Branding "EKSKUL" konsisten di seluruh aplikasi.
+24. Drizzle database tests pass.
+25. TestSprite tests pass.
+26. Tidak ditemukan celah authorization kritis pada pengujian MVP.
 
 ---
 
@@ -2351,6 +2536,24 @@ LUNAS / DITOLAK
 BUKTI PEMBAYARAN PDF
 ```
 
+Info pembayaran per-ekskul:
+
+```text
+EACH EXTRACURRICULAR
+   ├─ bank_name
+   ├─ bank_account_number
+   ├─ bank_account_holder
+   └─ qr_code_url
+
+Diatur oleh:
+- Admin (via form ekskul)
+- PJ (via /pj/ekskuls)
+
+Ditampilkan ke:
+- Siswa (halaman pembayaran, dialog bayar)
+- Receipt PDF (bagian "Dibayar Melalui")
+```
+
 Kunci keamanan sistem adalah:
 
 ```text
@@ -2361,10 +2564,12 @@ Full Access
 PJ/GURU
   ↓
 Access berdasarkan ekskul yang ditugaskan
+(termasuk pengaturan bank/QR ekskul sendiri)
 
 SISWA
   ↓
 Access berdasarkan data miliknya
+(termasuk info bank/QR ekskul yang diikuti)
 ```
 
-Dengan desain ini, **PJ/Guru bukan sekadar operator absensi**, tetapi menjadi penanggung jawab ekskul yang memiliki kewenangan operasional, termasuk **verifikasi pembayaran siswa pada ekskulnya sendiri**, sementara Admin tetap memiliki akses penuh untuk supervisi dan audit.
+Dengan desain ini, **PJ/Guru bukan sekadar operator absensi**, tetapi menjadi penanggung jawab ekskul yang memiliki kewenangan operasional, termasuk **verifikasi pembayaran siswa** dan **pengaturan info rekening/QR** pada ekskulnya sendiri, sementara Admin tetap memiliki akses penuh untuk supervisi dan audit.
