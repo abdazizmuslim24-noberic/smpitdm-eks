@@ -233,12 +233,15 @@ Bulk attendance inserts must use a transaction (BEGIN/COMMIT, ROLLBACK on failur
 - `/api/admin/meetings` — CRUD meetings (POST/PUT/DELETE)
 - `/api/admin/payments` — list + create manual payments
 - `/api/admin/audit` — view all verification audit
+- `/api/admin/memberships` — CRUD memberships (POST/PUT/DELETE, PJ-aware RBAC)
+- `/api/admin/master-options` — students (incl. className) + ekskuls (scoped by role: PJ → own ekskuls)
 
 ### PJ (`/api/pj/`)
 - `/api/pj/dashboard` — PJ dashboard stats
 - `/api/pj/ekskuls` — GET (bank fields) + PUT (bank/QR config for assigned ekskul)
 - `/api/pj/meetings` — CRUD meetings (scoped to assigned ekskul)
 - `/api/pj/payments` — list + verify/reject payments (scoped)
+- PJ memberships managed via `/api/admin/memberships` (already supports PJ_GURU + ownership check)
 
 ### Siswa (`/api/siswa/`)
 - `/api/siswa/dashboard` — Siswa dashboard
@@ -294,6 +297,7 @@ app/
 │   ├── dashboard/page.tsx
 │   ├── ekskuls/page.tsx          ← NEW: bank/QR settings
 │   ├── meetings/page.tsx
+│   ├── memberships/page.tsx       ← NEW: PJ manages own members (class filter)
 │   ├── attendance/page.tsx
 │   ├── payments/page.tsx
 │   └── reports/page.tsx
@@ -339,6 +343,9 @@ components/
 ├── features/
 │   ├── pj/
 │   │   └── ekskul-payment-dialog.tsx    ← NEW: PJ bank/QR edit dialog
+│   ├── admin/
+│   │   └── membership-form-dialog.tsx   ← includes class filter + row actions
+│   ├── membership-table.tsx       ← shared table (class + ekskul filter) for Admin & PJ
 │   └── siswa/
 │       └── siswa-payment-dialog.tsx     ← includes bank/QR info
 ├── dashboard/                     ← stat-card, chart components

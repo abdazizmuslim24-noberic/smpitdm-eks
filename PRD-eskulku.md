@@ -509,6 +509,13 @@ UNIQUE(student_id, extracurricular_id)
 
 Tujuannya agar satu siswa tidak terdaftar dua kali pada ekskul yang sama.
 
+### Pengelolaan Keanggotaan oleh Admin & PJ
+
+- **Admin**: halaman `/admin/memberships` — bisa mengelola keanggotaan semua ekskul.
+- **PJ/Guru**: halaman `/pj/memberships` — bisa menambah/mengedit/menghapus anggota untuk **ekskul yang menjadi tanggung jawabnya saja** (ownership check via `extracurricular_staff`). Daftar ekskul di form di-scope sesuai kepemilikan PJ.
+- **Filter Kelas**: form tambah/edit + tabel keanggotaan menyediakan **filter kelas** (dan filter ekskul pada tabel) agar mudah memilih siswa saat jumlah siswa banyak. Siswa yang tampil hanyalah yang berstatus `AKTIF`.
+- Constraint UNIQUE tetap ditegakkan (409 jika siswa sudah terdaftar di ekskul yang sama).
+
 ---
 
 # 14. Pertemuan Ekskul
