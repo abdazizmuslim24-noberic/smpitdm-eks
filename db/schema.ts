@@ -105,6 +105,10 @@ export const extracurriculars = pgTable(
     endTime: text("end_time"),
     location: text("location"),
     monthlyFee: doublePrecision("monthly_fee").notNull().default(0),
+    bankName: text("bank_name"),
+    bankAccountNumber: text("bank_account_number"),
+    bankAccountHolder: text("bank_account_holder"),
+    qrCodeUrl: text("qr_code_url"),
     status: text("status", { enum: EXTRACURRICULAR_STATUS })
       .notNull()
       .default("AKTIF"),

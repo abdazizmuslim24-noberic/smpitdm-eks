@@ -34,6 +34,9 @@ export default async function PjPaymentsPage() {
         id: payments.id,
         student: students.name,
         ekName: extracurriculars.name,
+        bankName: extracurriculars.bankName,
+        bankAccountNumber: extracurriculars.bankAccountNumber,
+        bankAccountHolder: extracurriculars.bankAccountHolder,
         period: payments.period,
         amount: payments.amount,
         method: payments.paymentMethod,
@@ -88,7 +91,19 @@ function PaymentTable({
   rows,
   canVerify = false,
 }: {
-  rows: { id: string; student: string; ekName: string; period: string; amount: number; method: string; status: string; proofFile: string | null }[];
+  rows: {
+    id: string;
+    student: string;
+    ekName: string;
+    bankName: string | null;
+    bankAccountNumber: string | null;
+    bankAccountHolder: string | null;
+    period: string;
+    amount: number;
+    method: string;
+    status: string;
+    proofFile: string | null;
+  }[];
   canVerify?: boolean;
 }) {
   return (
@@ -117,7 +132,15 @@ function PaymentTable({
             {rows.map((p) => (
               <TableRow key={p.id}>
                 <TableCell className="font-medium">{p.student}</TableCell>
-                <TableCell>{p.ekName}</TableCell>
+                <TableCell>
+                  <div className="font-medium">{p.ekName}</div>
+                  {p.bankName || p.bankAccountNumber ? (
+                    <div className="text-xs text-muted-foreground">
+                      {p.bankName ?? ""} {p.bankAccountNumber ?? ""}
+                      {p.bankAccountHolder ? ` · ${p.bankAccountHolder}` : ""}
+                    </div>
+                  ) : null}
+                </TableCell>
                 <TableCell>{p.period}</TableCell>
                 <TableCell><PaymentMethodBadge method={p.method} /></TableCell>
                 <TableCell>{formatRupiah(p.amount)}</TableCell>

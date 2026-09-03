@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   CalendarCheck,
   CheckCircle2,
+  CreditCard,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -28,7 +29,8 @@ export type IconName =
   | "Receipt"
   | "ShieldCheck"
   | "CalendarCheck"
-  | "CheckCircle2";
+  | "CheckCircle2"
+  | "CreditCard";
 
 const iconMap: Record<IconName, LucideIcon> = {
   LayoutDashboard,
@@ -44,6 +46,7 @@ const iconMap: Record<IconName, LucideIcon> = {
   ShieldCheck,
   CalendarCheck,
   CheckCircle2,
+  CreditCard,
 };
 
 export function resolveIcon(name?: IconName): LucideIcon {

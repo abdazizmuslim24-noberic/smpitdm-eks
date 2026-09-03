@@ -59,13 +59,28 @@ async function upsertStudent(nis: string, data: Omit<typeof students.$inferInser
   return s.id;
 }
 
-async function upsertExtracurricular(code: string, name: string) {
+async function upsertExtracurricular(
+  code: string,
+  name: string,
+  bank?: { bankName?: string; bankAccountNumber?: string; bankAccountHolder?: string; qrCodeUrl?: string }
+) {
   const existing = await db
     .select()
     .from(extracurriculars)
     .where(eq(extracurriculars.code, code))
     .limit(1);
   if (existing.length > 0) {
+    if (bank) {
+      await db
+        .update(extracurriculars)
+        .set({
+          bankName: bank.bankName ?? null,
+          bankAccountNumber: bank.bankAccountNumber ?? null,
+          bankAccountHolder: bank.bankAccountHolder ?? null,
+          qrCodeUrl: bank.qrCodeUrl ?? null,
+        })
+        .where(eq(extracurriculars.id, existing[0].id));
+    }
     return existing[0].id;
   }
   const [e] = await db
@@ -75,6 +90,10 @@ async function upsertExtracurricular(code: string, name: string) {
       code,
       name,
       monthlyFee: 50000,
+      bankName: bank?.bankName ?? null,
+      bankAccountNumber: bank?.bankAccountNumber ?? null,
+      bankAccountHolder: bank?.bankAccountHolder ?? null,
+      qrCodeUrl: bank?.qrCodeUrl ?? null,
       status: "AKTIF",
     })
     .returning();
@@ -90,8 +109,17 @@ async function main() {
   const siswa1Id = await upsertUser("siswa1@example.com", "Ahmad Fauzi", "SISWA");
   const siswa2Id = await upsertUser("siswa2@example.com", "Dewi Lestari", "SISWA");
 
-  const futsalId = await upsertExtracurricular("FUT", "Futsal");
-  const basketId = await upsertExtracurricular("BSK", "Basket");
+  const futsalId = await upsertExtracurricular("FUT", "Futsal", {
+    bankName: "BCA",
+    bankAccountNumber: "7005936063",
+    bankAccountHolder: "ABDUL AZIZ MUSLIM",
+    qrCodeUrl: "/qr-bca.jpeg",
+  });
+  const basketId = await upsertExtracurricular("BSK", "Basket", {
+    bankName: "BSI",
+    bankAccountNumber: "1234567890",
+    bankAccountHolder: "Siti Rahma",
+  });
   const pramukaId = await upsertExtracurricular("PRM", "Pramuka");
   await upsertExtracurricular("THF", "Tahfidz");
 

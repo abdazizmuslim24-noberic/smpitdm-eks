@@ -8,6 +8,11 @@ export interface ReceiptData {
   paymentDate: Date;
   verifiedByName?: string | null;
   extracurricularId?: string;
+  paymentAccount?: {
+    bankName?: string | null;
+    bankAccountNumber?: string | null;
+    bankAccountHolder?: string | null;
+  } | null;
 }
 
 export function ReceiptView({ data }: { data: ReceiptData }) {
@@ -34,6 +39,22 @@ export function ReceiptView({ data }: { data: ReceiptData }) {
         <Row label="Ekstrakurikuler" value={data.ekName} />
         <Row label="Periode" value={data.period} />
         <Row label="Tanggal Pembayaran" value={data.paymentDate.toLocaleDateString("id-ID")} />
+        {data.paymentAccount &&
+          (data.paymentAccount.bankName ||
+            data.paymentAccount.bankAccountNumber) && (
+            <Row
+              label="Dibayar Melalui"
+              value={[
+                data.paymentAccount.bankName,
+                data.paymentAccount.bankAccountNumber,
+                data.paymentAccount.bankAccountHolder
+                  ? `a.n. ${data.paymentAccount.bankAccountHolder}`
+                  : "",
+              ]
+                .filter(Boolean)
+                .join(" · ")}
+            />
+          )}
       </div>
 
       <div className="mt-6 border-t pt-4">

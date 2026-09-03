@@ -26,7 +26,7 @@ export function buildReceiptPdf(data: ReceiptData): Promise<Buffer> {
     const pageWidth = doc.page.width - 48 * 2;
 
     // Header
-    doc.fontSize(16).fillColor("#111827").text("SMPITDM EKS", { continued: false });
+    doc.fontSize(16).fillColor("#111827").text("SMPITDM EKSKUL", { continued: false });
     doc.fontSize(10).fillColor("#6b7280").text("Sistem Manajemen Ekstrakurikuler Sekolah");
     doc.moveDown(0.5);
 
@@ -49,6 +49,23 @@ export function buildReceiptPdf(data: ReceiptData): Promise<Buffer> {
       ["Periode", data.period],
       ["Tanggal Pembayaran", fmtDateShort(data.paymentDate)],
     ];
+    if (
+      data.paymentAccount &&
+      (data.paymentAccount.bankName || data.paymentAccount.bankAccountNumber)
+    ) {
+      rows.push([
+        "Dibayar Melalui",
+        [
+          data.paymentAccount.bankName,
+          data.paymentAccount.bankAccountNumber,
+          data.paymentAccount.bankAccountHolder
+            ? `a.n. ${data.paymentAccount.bankAccountHolder}`
+            : "",
+        ]
+          .filter(Boolean)
+          .join(" · "),
+      ]);
+    }
     for (const [label, value] of rows) {
       const rowY = doc.y;
       doc.fontSize(10).fillColor("#6b7280").text(label, 48, rowY);
@@ -100,7 +117,7 @@ export function buildReceiptPdf(data: ReceiptData): Promise<Buffer> {
     );
 
     doc.font("Helvetica").fontSize(8).fillColor("#6b7280").text(
-      "Kuitansi ini dihasilkan otomatis oleh SMPITDM EKS.",
+      "Kuitansi ini dihasilkan otomatis oleh SMPITDM EKSKUL.",
       48,
       760,
       { align: "center", width: pageWidth }

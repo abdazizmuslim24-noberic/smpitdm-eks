@@ -1,11 +1,20 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
+import { mkdir, writeFile } from "fs/promises";
+import path from "path";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
 import { extracurriculars } from "@/db/schema";
 import { requireRole } from "@/lib/auth/guard";
 import { hasPermission } from "@/lib/permissions/rbac";
+
+const IMAGE_MIME = new Set(["image/jpeg", "image/png"]);
+const MIME_EXT: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+};
+const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
 
 const createSchema = z.object({
   code: z.string().min(1, "Kode wajib diisi"),
@@ -15,6 +24,9 @@ const createSchema = z.object({
   endTime: z.string().optional().default(""),
   location: z.string().optional().default(""),
   monthlyFee: z.number().optional().default(0),
+  bankName: z.string().optional().default(""),
+  bankAccountNumber: z.string().optional().default(""),
+  bankAccountHolder: z.string().optional().default(""),
 });
 
 const updateSchema = createSchema.extend({
@@ -29,19 +41,44 @@ async function assertAdmin() {
   return session;
 }
 
+async function saveQr(file: File | null): Promise<string | null> {
+  if (!file || !(file instanceof File) || file.size === 0) {
+    return null;
+  }
+  if (!IMAGE_MIME.has(file.type)) {
+    throw new Error("Tipe file QR tidak diizinkan. Gunakan JPG atau PNG.");
+  }
+  if (file.size > MAX_SIZE) {
+    throw new Error("Ukuran file QR maksimal 5 MB.");
+  }
+  const ext = MIME_EXT[file.type] ?? "png";
+  const safeName = `${randomUUID()}.${ext}`;
+  const uploadDir = path.join(process.cwd(), "public", "uploads");
+  await mkdir(uploadDir, { recursive: true });
+  const buffer = Buffer.from(await file.arrayBuffer());
+  await writeFile(path.join(uploadDir, safeName), buffer);
+  return `/uploads/${safeName}`;
+}
+
 export async function POST(request: Request) {
   if (!(await assertAdmin())) {
     return NextResponse.json({ error: "Akses ditolak." }, { status: 403 });
   }
 
-  let body;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Payload tidak valid." }, { status: 400 });
-  }
+  const form = await request.formData();
+  const parsed = createSchema.safeParse({
+    code: (form.get("code") as string) ?? "",
+    name: (form.get("name") as string) ?? "",
+    day: (form.get("day") as string) ?? "",
+    startTime: (form.get("startTime") as string) ?? "",
+    endTime: (form.get("endTime") as string) ?? "",
+    location: (form.get("location") as string) ?? "",
+    monthlyFee: Number(form.get("monthlyFee")) || 0,
+    bankName: (form.get("bankName") as string) ?? "",
+    bankAccountNumber: (form.get("bankAccountNumber") as string) ?? "",
+    bankAccountHolder: (form.get("bankAccountHolder") as string) ?? "",
+  });
 
-  const parsed = createSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
       { error: parsed.error.errors[0]?.message ?? "Data tidak valid." },
@@ -59,6 +96,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Kode sudah digunakan." }, { status: 409 });
   }
 
+  let qrCodeUrl: string | null = null;
+  const qrFile = form.get("qr") as File | null;
+  try {
+    qrCodeUrl = await saveQr(qrFile);
+  } catch (e) {
+    return NextResponse.json(
+      { error: (e as Error).message },
+      { status: 400 }
+    );
+  }
+
   await db.insert(extracurriculars).values({
     id: randomUUID(),
     code,
@@ -68,6 +116,10 @@ export async function POST(request: Request) {
     endTime: parsed.data.endTime || null,
     location: parsed.data.location || null,
     monthlyFee: parsed.data.monthlyFee,
+    bankName: parsed.data.bankName || null,
+    bankAccountNumber: parsed.data.bankAccountNumber || null,
+    bankAccountHolder: parsed.data.bankAccountHolder || null,
+    qrCodeUrl,
   });
 
   return NextResponse.json({ ok: true });
@@ -78,14 +130,21 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: "Akses ditolak." }, { status: 403 });
   }
 
-  let body;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Payload tidak valid." }, { status: 400 });
-  }
+  const form = await request.formData();
+  const parsed = updateSchema.safeParse({
+    id: (form.get("id") as string) ?? "",
+    code: (form.get("code") as string) ?? "",
+    name: (form.get("name") as string) ?? "",
+    day: (form.get("day") as string) ?? "",
+    startTime: (form.get("startTime") as string) ?? "",
+    endTime: (form.get("endTime") as string) ?? "",
+    location: (form.get("location") as string) ?? "",
+    monthlyFee: Number(form.get("monthlyFee")) || 0,
+    bankName: (form.get("bankName") as string) ?? "",
+    bankAccountNumber: (form.get("bankAccountNumber") as string) ?? "",
+    bankAccountHolder: (form.get("bankAccountHolder") as string) ?? "",
+  });
 
-  const parsed = updateSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
       { error: parsed.error.errors[0]?.message ?? "Data tidak valid." },
@@ -94,7 +153,7 @@ export async function PUT(request: Request) {
   }
 
   const [target] = await db
-    .select({ id: extracurriculars.id })
+    .select({ id: extracurriculars.id, qrCodeUrl: extracurriculars.qrCodeUrl })
     .from(extracurriculars)
     .where(eq(extracurriculars.id, parsed.data.id))
     .limit(1);
@@ -115,6 +174,24 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: "Kode sudah digunakan." }, { status: 409 });
   }
 
+  const qrFile = form.get("qr") as File | null;
+  const removeQr = (form.get("removeQr") as string) === "true";
+
+  let nextQr = target.qrCodeUrl;
+  try {
+    if (qrFile && qrFile.size > 0) {
+      const saved = await saveQr(qrFile);
+      if (saved) nextQr = saved;
+    } else if (removeQr) {
+      nextQr = null;
+    }
+  } catch (e) {
+    return NextResponse.json(
+      { error: (e as Error).message },
+      { status: 400 }
+    );
+  }
+
   await db
     .update(extracurriculars)
     .set({
@@ -125,6 +202,10 @@ export async function PUT(request: Request) {
       endTime: parsed.data.endTime || null,
       location: parsed.data.location || null,
       monthlyFee: parsed.data.monthlyFee,
+      bankName: parsed.data.bankName || null,
+      bankAccountNumber: parsed.data.bankAccountNumber || null,
+      bankAccountHolder: parsed.data.bankAccountHolder || null,
+      qrCodeUrl: nextQr,
     })
     .where(eq(extracurriculars.id, parsed.data.id));
 

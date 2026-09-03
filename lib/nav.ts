@@ -50,7 +50,14 @@ const adminNav: NavGroup[] = [
 const pjNav: NavGroup[] = [
   {
     label: "Utama",
-    items: [{ title: "Dashboard", href: "/pj/dashboard", icon: "LayoutDashboard" }],
+    items: [
+      { title: "Dashboard", href: "/pj/dashboard", icon: "LayoutDashboard" },
+      {
+        title: "Pengaturan Ekskul",
+        href: "/pj/ekskuls",
+        icon: "CreditCard",
+      },
+    ],
   },
   {
     label: "Operasional",

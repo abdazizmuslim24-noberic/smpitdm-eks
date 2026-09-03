@@ -22,6 +22,10 @@ interface Ek {
   name: string;
   code: string;
   monthlyFee: number;
+  bankName: string | null;
+  bankAccountNumber: string | null;
+  bankAccountHolder: string | null;
+  qrCodeUrl: string | null;
 }
 
 function defaultPeriod(): string {
@@ -70,6 +74,8 @@ export function SiswaPaymentDialog() {
       amount: ek ? String(ek.monthlyFee ?? "") : f.amount,
     }));
   }
+
+  const selectedEk = ekskuls.find((e) => e.id === form.extracurricularId) ?? null;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -127,6 +133,41 @@ export function SiswaPaymentDialog() {
                 <option key={e.id} value={e.id}>{e.name}</option>
               ))}
             </Select>
+            {selectedEk && (
+              <div className="rounded-md border border-primary/30 bg-primary/5 p-3 text-sm">
+                <div className="font-semibold text-foreground">Pembayaran {selectedEk.name}</div>
+                {selectedEk.bankName || selectedEk.bankAccountNumber ? (
+                  <div className="mt-1 space-y-0.5 text-muted-foreground">
+                    <div>
+                      Transfer ke{" "}
+                      <span className="font-semibold text-foreground">{selectedEk.bankName ?? "Rekening"}</span>{" "}
+                      <span className="font-semibold text-foreground">{selectedEk.bankAccountNumber ?? "—"}</span>
+                    </div>
+                    {selectedEk.bankAccountHolder && (
+                      <div>a.n. {selectedEk.bankAccountHolder}</div>
+                    )}
+                  </div>
+                ) : (
+                  <p className="mt-1 text-muted-foreground">Info rekening belum diatur untuk ekskul ini.</p>
+                )}
+                {selectedEk.qrCodeUrl && (
+                  <div className="mt-2 flex flex-col items-start gap-1">
+                    <img
+                      src={selectedEk.qrCodeUrl}
+                      alt="QR Pembayaran"
+                      className="h-24 w-24 rounded-md border border-border object-contain bg-white"
+                    />
+                    <a
+                      href={selectedEk.qrCodeUrl}
+                      download="QR-Pembayaran.jpeg"
+                      className="text-xs font-semibold text-primary hover:underline"
+                    >
+                      Download QR
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">

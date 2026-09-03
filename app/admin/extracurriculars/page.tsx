@@ -103,6 +103,10 @@ export default async function AdminExtracurricularsPage() {
                           endTime: e.endTime,
                           location: e.location,
                           monthlyFee: e.monthlyFee,
+                          bankName: e.bankName,
+                          bankAccountNumber: e.bankAccountNumber,
+                          bankAccountHolder: e.bankAccountHolder,
+                          qrCodeUrl: e.qrCodeUrl,
                         }}
                       />
                     </TableCell>

@@ -25,6 +25,9 @@ export async function getLunasReceipt(paymentId: string): Promise<ReceiptData | 
       paymentDate: payments.paymentDate,
       verifiedByName: users.name,
       extracurricularId: payments.extracurricularId,
+      bankName: extracurriculars.bankName,
+      bankAccountNumber: extracurriculars.bankAccountNumber,
+      bankAccountHolder: extracurriculars.bankAccountHolder,
     })
     .from(paymentReceipts)
     .innerJoin(payments, eq(paymentReceipts.paymentId, payments.id))
@@ -46,5 +49,10 @@ export async function getLunasReceipt(paymentId: string): Promise<ReceiptData | 
     paymentDate: row.paymentDate,
     verifiedByName: row.verifiedByName,
     extracurricularId: row.extracurricularId,
+    paymentAccount: {
+      bankName: row.bankName,
+      bankAccountNumber: row.bankAccountNumber,
+      bankAccountHolder: row.bankAccountHolder,
+    },
   };
 }

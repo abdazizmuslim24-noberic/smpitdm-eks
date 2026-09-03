@@ -24,6 +24,10 @@ export async function GET() {
       name: extracurriculars.name,
       code: extracurriculars.code,
       monthlyFee: extracurriculars.monthlyFee,
+      bankName: extracurriculars.bankName,
+      bankAccountNumber: extracurriculars.bankAccountNumber,
+      bankAccountHolder: extracurriculars.bankAccountHolder,
+      qrCodeUrl: extracurriculars.qrCodeUrl,
     })
     .from(memberships)
     .innerJoin(extracurriculars, eq(memberships.extracurricularId, extracurriculars.id))
