@@ -1,7 +1,4 @@
 import { NextResponse } from "next/server";
-import { randomUUID } from "crypto";
-import { mkdir, writeFile } from "fs/promises";
-import path from "path";
 import { inArray } from "drizzle-orm";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
@@ -11,10 +8,6 @@ import { getCurrentUser } from "@/lib/auth/current-user";
 import { getPjEkskulIds, pjIsAssigned } from "@/lib/pj-scope";
 
 const IMAGE_MIME = new Set(["image/jpeg", "image/png"]);
-const MIME_EXT: Record<string, string> = {
-  "image/jpeg": "jpg",
-  "image/png": "png",
-};
 const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
 
 async function saveQr(file: File | null): Promise<string | null> {
@@ -27,13 +20,8 @@ async function saveQr(file: File | null): Promise<string | null> {
   if (file.size > MAX_SIZE) {
     throw new Error("Ukuran file QR maksimal 5 MB.");
   }
-  const ext = MIME_EXT[file.type] ?? "png";
-  const safeName = `${randomUUID()}.${ext}`;
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-  await mkdir(uploadDir, { recursive: true });
   const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(path.join(uploadDir, safeName), buffer);
-  return `/uploads/${safeName}`;
+  return `data:${file.type};base64,${buffer.toString("base64")}`;
 }
 
 const updateSchema = z.object({

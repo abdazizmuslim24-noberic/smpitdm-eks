@@ -260,7 +260,12 @@ Bulk attendance inserts must use a transaction (BEGIN/COMMIT, ROLLBACK on failur
 - Allowed for payment proof: `image/jpeg`, `image/png`, `application/pdf` — max 5MB
 - Allowed for QR code: `image/jpeg`, `image/png` — max 5MB
 - Validate MIME type server-side; never trust client filename
-- Generate safe filenames (UUID prefix); restrict access by ownership
+- **STORAGE: base64 data URI disimpan langsung di kolom PostgreSQL (GRATIS, tanpa object storage).**
+  - `extracurriculars.qr_code_url` → `data:<mime>;base64,...`
+  - `payments.proof_file` → `data:<mime>;base64,...`
+- TIDAK menulis ke filesystem (`public/uploads/`) — gagal di Vercel serverless (read-only). Jangan gunakan Vercel Blob/R2/Supabase (bukan free).
+- File lama tidak lagi dihapus dari disk (tidak ada disk); cukup set kolom ke NULL.
+- Render langsung via `img src` / `a href` — data URI kompatibel tanpa frontend change.
 
 ## Payment Verification Rules
 
@@ -358,9 +363,11 @@ db/
 
 public/
 ├── logo-sekolah.png               ← school emblem (app logo)
-├── qr-bca.jpeg                    ← BCA QR code image
-└── uploads/                       ← user-uploaded files (proof, QR)
+├── qr-bca.jpeg                    ← BCA QR code image (seed)
+└── uploads/                       ← filesystem uploads (TIDAK DIPAKAI, read-only di Vercel)
 ```
+
+> **PENTING:** `public/uploads/` tidak dipakai untuk menyimpan upload. Semua file upload (QR & bukti pembayaran) disimpan sebagai base64 data URI di kolom PostgreSQL.
 
 ## Development Phases
 
