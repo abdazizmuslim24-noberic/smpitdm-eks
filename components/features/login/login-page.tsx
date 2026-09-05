@@ -128,7 +128,7 @@ export function LoginPage() {
           </form>
 
           <p className="mt-6 border-t pt-4 text-center text-xs text-muted-foreground">
-            SMPITDM EKSKUL — Sistem Manajemen Ekstrakurikuler · Created by{" "}
+            SMPITDM EKSKULKU — Sistem Manajemen Ekstrakurikuler · Created by{" "}
             <span className="font-semibold text-foreground">Pak Aziz Ms</span>
           </p>
         </div>

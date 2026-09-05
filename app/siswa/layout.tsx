@@ -14,7 +14,8 @@ export default async function SiswaLayout({
 
   return (
     <AppShell
-      brand="EKSKUL"
+      brand="EKSKULKU"
+      homeHref="/siswa/dashboard"
       user={{
         name: user.name,
         roleLabel: user.roleLabel,

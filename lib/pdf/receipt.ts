@@ -26,7 +26,7 @@ export function buildReceiptPdf(data: ReceiptData): Promise<Buffer> {
     const pageWidth = doc.page.width - 48 * 2;
 
     // Header
-    doc.fontSize(16).fillColor("#111827").text("SMPITDM EKSKUL", { continued: false });
+    doc.fontSize(16).fillColor("#111827").text("SMPITDM EKSKULKU", { continued: false });
     doc.fontSize(10).fillColor("#6b7280").text("Sistem Manajemen Ekstrakurikuler Sekolah");
     doc.moveDown(0.5);
 
@@ -117,7 +117,7 @@ export function buildReceiptPdf(data: ReceiptData): Promise<Buffer> {
     );
 
     doc.font("Helvetica").fontSize(8).fillColor("#6b7280").text(
-      "Kuitansi ini dihasilkan otomatis oleh SMPITDM EKSKUL.",
+      "Kuitansi ini dihasilkan otomatis oleh SMPITDM EKSKULKU.",
       48,
       760,
       { align: "center", width: pageWidth }

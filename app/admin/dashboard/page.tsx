@@ -205,7 +205,7 @@ export default async function AdminDashboardPage() {
         <span className="text-xs text-muted-foreground">
           Total penerimaan yang belum diverifikasi:{" "}
           <strong>{formatRupiah(pendingPaymentAgg?.sum ?? 0)}</strong>
-          {" · "}SMPITDM EKSKUL
+          {" · "}SMPITDM EKSKULKU
         </span>
       </div>
     </div>

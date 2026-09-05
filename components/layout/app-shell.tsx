@@ -25,12 +25,13 @@ export interface UserInfo {
 
 export interface AppShellProps {
   brand: string;
+  homeHref: string;
   user: UserInfo;
   navGroups: { label: string; items: NavItem[] }[];
   children: React.ReactNode;
 }
 
-export function AppShell({ brand, user, navGroups, children }: AppShellProps) {
+export function AppShell({ brand, homeHref, user, navGroups, children }: AppShellProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -45,8 +46,10 @@ export function AppShell({ brand, user, navGroups, children }: AppShellProps) {
       {/* Sidebar (desktop) */}
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col bg-sidebar text-sidebar-foreground lg:flex">
         <div className="flex items-center gap-3 border-b border-white/10 px-5 py-5">
-          <BrandLogo className="h-9 w-9 rounded-md" />
-          <span className="font-heading font-bold text-white">{brand}</span>
+          <Link href={homeHref} className="flex items-center gap-3">
+            <BrandLogo className="h-9 w-9 rounded-md" />
+            <span className="font-heading font-bold text-white">{brand}</span>
+          </Link>
         </div>
 
         <nav className="scrollbar-hide flex-1 space-y-5 overflow-y-auto px-3 py-4">
@@ -110,8 +113,10 @@ export function AppShell({ brand, user, navGroups, children }: AppShellProps) {
       {/* Mobile top bar */}
       <div className="fixed inset-x-0 top-0 z-30 flex h-14 items-center justify-between border-b bg-background px-4 lg:hidden">
         <div className="flex items-center gap-2">
-          <BrandLogo className="h-8 w-8 rounded-md" />
-          <span className="font-heading font-bold">{brand}</span>
+          <Link href={homeHref} className="flex items-center gap-2">
+            <BrandLogo className="h-8 w-8 rounded-md" />
+            <span className="font-heading font-bold">{brand}</span>
+          </Link>
         </div>
         <div className="flex items-center gap-1">
           <MobileNav navGroups={navGroups} />
@@ -135,7 +140,7 @@ export function AppShell({ brand, user, navGroups, children }: AppShellProps) {
         </header>
         <main className="flex-1 p-4 pt-20 lg:p-6 lg:pt-6">{children}</main>
         <footer className="border-t px-6 py-4 text-center text-xs text-muted-foreground">
-          SMPITDM EKSKUL — Sistem Manajemen Ekstrakurikuler · Created by{" "}
+          SMPITDM EKSKULKU — Sistem Manajemen Ekstrakurikuler · Created by{" "}
           <span className="font-semibold text-foreground">Pak Aziz Ms</span>
         </footer>
       </div>

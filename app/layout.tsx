@@ -18,8 +18,8 @@ const openSans = Open_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "EKSKUL — Sistem Manajemen Ekstrakurikuler",
-    template: "%s — EKSKUL",
+    default: "EKSKULKU — Sistem Manajemen Ekstrakurikuler",
+    template: "%s — EKSKULKU",
   },
   description:
     "Sistem manajemen ekstrakurikuler sekolah: absensi, rekap, pembayaran, dan laporan.",

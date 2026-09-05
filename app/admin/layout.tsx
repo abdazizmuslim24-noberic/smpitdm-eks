@@ -10,7 +10,8 @@ export default async function AdminLayout({
   const user = await getCurrentUser();
   return (
     <AppShell
-      brand="EKSKUL"
+      brand="EKSKULKU"
+      homeHref="/admin/dashboard"
       user={{
         name: user.name,
         roleLabel: user.roleLabel,
