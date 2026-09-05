@@ -14,7 +14,8 @@ import {
 } from "@/components/ui/table";
 import { SiswaPaymentDialog } from "@/components/features/payment/siswa-payment-dialog";
 import { PaymentStatusBadge } from "@/components/features/payment/payment-badges";
-import { Paperclip, CreditCard, Download } from "lucide-react";
+import { ProofFileLink } from "@/components/features/proof-file-link";
+import { CreditCard, Download } from "lucide-react";
 
 export const metadata = { title: "Pembayaran Saya" };
 
@@ -199,14 +200,7 @@ export default async function SiswaPaymentsPage() {
                   </TableCell>
                   <TableCell>
                     {p.proofFile ? (
-                      <a
-                        href={p.proofFile}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
-                      >
-                        <Paperclip className="h-4 w-4" /> Lihat
-                      </a>
+                      <ProofFileLink proofFile={p.proofFile} variant="inline" />
                     ) : (
                       <span className="text-muted-foreground">—</span>
                     )}

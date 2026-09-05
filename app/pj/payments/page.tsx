@@ -15,8 +15,9 @@ import {
 } from "@/components/ui/table";
 import { PaymentVerifyDialog } from "@/components/features/payment/payment-verify-dialog";
 import { PaymentMethodBadge, PaymentStatusBadge } from "@/components/features/payment/payment-badges";
+import { ProofFileLink } from "@/components/features/proof-file-link";
 import { Button } from "@/components/ui/button";
-import { Receipt, Paperclip } from "lucide-react";
+import { Receipt } from "lucide-react";
 
 export const metadata = { title: "Pembayaran" };
 
@@ -159,11 +160,7 @@ function PaymentTable({
                       </Button>
                     ) : null}
                     {p.proofFile ? (
-                      <Button asChild size="sm" variant="ghost" className="gap-1 text-primary">
-                        <a href={p.proofFile} target="_blank" rel="noreferrer">
-                          <Paperclip className="h-4 w-4" /> Bukti
-                        </a>
-                      </Button>
+                      <ProofFileLink proofFile={p.proofFile} />
                     ) : null}
                   </div>
                 </TableCell>
