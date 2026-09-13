@@ -13,6 +13,7 @@ import {
   CreditCard,
 } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -58,7 +59,10 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="relative flex min-h-screen">
+      <div className="absolute right-4 top-4 z-10">
+        <ThemeToggle />
+      </div>
       {/* Left brand panel */}
       <div className="hidden flex-1 flex-col justify-center bg-gradient-to-br from-primary via-primary to-secondary p-12 text-white lg:flex">
         <div className="max-w-md">
@@ -129,7 +133,15 @@ export function LoginPage() {
 
           <p className="mt-6 border-t pt-4 text-center text-xs text-muted-foreground">
             SMPITDM EKSKULKU — Sistem Manajemen Ekstrakurikuler · Created by{" "}
-            <span className="font-semibold text-foreground">Pak Aziz Ms</span>
+            <span className="font-semibold text-foreground">Pak Aziz</span>
+            <span aria-hidden> · </span>
+            Kontak kendala:{" "}
+            <a
+              href="tel:+6285810661833"
+              className="font-semibold text-primary hover:underline"
+            >
+              085810661833
+            </a>
           </p>
         </div>
       </div>

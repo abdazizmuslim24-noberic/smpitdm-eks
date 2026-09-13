@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins, Open_Sans } from "next/font/google";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -31,8 +32,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className={`${poppins.variable} ${openSans.variable}`}>
-      <body>{children}</body>
+    <html lang="id" className={`${poppins.variable} ${openSans.variable}`} suppressHydrationWarning>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

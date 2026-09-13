@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { LogOut, ShieldCheck, Menu, X } from "lucide-react";
 import { resolveIcon, type IconName } from "@/lib/icons";
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 export type { IconName };
 
@@ -34,6 +35,7 @@ export interface AppShellProps {
 export function AppShell({ brand, homeHref, user, navGroups, children }: AppShellProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   async function handleLogout() {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -107,6 +109,12 @@ export function AppShell({ brand, homeHref, user, navGroups, children }: AppShel
           >
             <LogOut className="h-4 w-4" /> Keluar
           </Button>
+          <div className="mt-1 flex items-center justify-between px-1">
+            <ThemeToggle light className="h-8 w-8" />
+            <span className="text-[10px] text-secondary/60">
+              SMS: 085810661833
+            </span>
+          </div>
         </div>
       </aside>
 
@@ -119,7 +127,12 @@ export function AppShell({ brand, homeHref, user, navGroups, children }: AppShel
           </Link>
         </div>
         <div className="flex items-center gap-1">
-          <MobileNav navGroups={navGroups} />
+          <ThemeToggle />
+          <MobileNav
+            navGroups={navGroups}
+            open={mobileMenuOpen}
+            onOpenChange={setMobileMenuOpen}
+          />
           <button
             className="rounded-md p-1.5 text-muted-foreground hover:bg-muted"
             onClick={handleLogout}
@@ -138,12 +151,23 @@ export function AppShell({ brand, homeHref, user, navGroups, children }: AppShel
           </div>
           <ShieldCheck className="h-5 w-5 text-muted-foreground" />
         </header>
-        <main className="flex-1 p-4 pt-20 lg:p-6 lg:pt-6">{children}</main>
-        <footer className="border-t px-6 py-4 text-center text-xs text-muted-foreground">
+        <main className="flex-1 p-4 pb-24 pt-20 lg:p-6 lg:pb-6 lg:pt-6">{children}</main>
+        <footer className="border-t px-6 py-4 pb-20 text-center text-xs text-muted-foreground lg:pb-4">
           SMPITDM EKSKULKU — Sistem Manajemen Ekstrakurikuler · Created by{" "}
-          <span className="font-semibold text-foreground">Pak Aziz Ms</span>
+          <span className="font-semibold text-foreground">Pak Aziz</span>
+          <span aria-hidden> · </span>
+          Kontak kendala:{" "}
+          <a
+            href="tel:+6285810661833"
+            className="font-semibold text-primary hover:underline"
+          >
+            085810661833
+          </a>
         </footer>
       </div>
+
+      {/* Mobile bottom quick nav */}
+      <BottomNav navGroups={navGroups} onOpenMenu={() => setMobileMenuOpen(true)} />
     </div>
   );
 }
@@ -157,14 +181,21 @@ function currentTitle(pathname: string, groups: { items: NavItem[] }[]): string 
   return "Dashboard";
 }
 
-function MobileNav({ navGroups }: { navGroups: AppShellProps["navGroups"] }) {
+function MobileNav({
+  navGroups,
+  open,
+  onOpenChange,
+}: {
+  navGroups: AppShellProps["navGroups"];
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
   return (
     <>
       <button
         className="rounded-md p-1.5 text-muted-foreground hover:bg-muted"
-        onClick={() => setOpen(!open)}
+        onClick={() => onOpenChange(!open)}
         aria-label="Menu"
       >
         {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -173,7 +204,7 @@ function MobileNav({ navGroups }: { navGroups: AppShellProps["navGroups"] }) {
         <>
           <div
             className="fixed inset-0 z-40 bg-black/40"
-            onClick={() => setOpen(false)}
+            onClick={() => onOpenChange(false)}
           />
           <div className="fixed inset-x-0 top-14 z-50 border-b bg-background p-3 shadow-lg">
             <nav className="scrollbar-hide max-h-[60vh] space-y-4 overflow-y-auto">
@@ -192,7 +223,7 @@ function MobileNav({ navGroups }: { navGroups: AppShellProps["navGroups"] }) {
                         <Link
                           key={item.href}
                           href={item.href}
-                          onClick={() => setOpen(false)}
+                          onClick={() => onOpenChange(false)}
                           className={cn(
                             "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium",
                             active
@@ -213,5 +244,61 @@ function MobileNav({ navGroups }: { navGroups: AppShellProps["navGroups"] }) {
         </>
       )}
     </>
+  );
+}
+
+function quickNavItems(groups: AppShellProps["navGroups"]): NavItem[] {
+  const firstPerGroup = groups.map((g) => g.items[0]).filter(Boolean);
+  const rest = groups.flatMap((g) => g.items.slice(1));
+  const ordered = [...firstPerGroup];
+  for (const item of rest) {
+    if (ordered.length >= 4) break;
+    if (!ordered.some((o) => o.href === item.href)) ordered.push(item);
+  }
+  return ordered.slice(0, 4);
+}
+
+function BottomNav({
+  navGroups,
+  onOpenMenu,
+}: {
+  navGroups: AppShellProps["navGroups"];
+  onOpenMenu: () => void;
+}) {
+  const pathname = usePathname();
+  const items = quickNavItems(navGroups);
+  return (
+    <nav className="fixed inset-x-0 bottom-0 z-30 border-t bg-background/95 backdrop-blur lg:hidden">
+      <div className="flex items-stretch justify-around">
+        {items.map((item) => {
+          const Icon = resolveIcon(item.icon);
+          const active =
+            pathname === item.href || pathname.startsWith(item.href + "/");
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] font-medium transition-colors",
+                active
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              {Icon && <Icon className="h-5 w-5" />}
+              <span className="max-w-full truncate px-1">{item.title}</span>
+            </Link>
+          );
+        })}
+        <button
+          onClick={onOpenMenu}
+          className="flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] font-medium text-muted-foreground hover:text-foreground"
+          aria-label="Semua menu"
+        >
+          <Menu className="h-5 w-5" />
+          <span>Semua</span>
+        </button>
+      </div>
+    </nav>
   );
 }
