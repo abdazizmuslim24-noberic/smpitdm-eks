@@ -65,6 +65,7 @@ const pjNav: NavGroup[] = [
       { title: "Pertemuan", href: "/pj/meetings", icon: "CalendarDays" },
       { title: "Keanggotaan", href: "/pj/memberships", icon: "UserPlus" },
       { title: "Absensi", href: "/pj/attendance", icon: "ClipboardCheck" },
+      { title: "Catatan Siswa", href: "/pj/notes", icon: "NotebookPen" },
     ],
   },
   {

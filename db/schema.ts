@@ -48,6 +48,9 @@ export type PaymentStatus = (typeof PAYMENT_STATUS)[number];
 export const PAYMENT_METHOD = ["TUNAI", "TRANSFER", "LAINNYA"] as const;
 export type PaymentMethod = (typeof PAYMENT_METHOD)[number];
 
+export const NOTE_CATEGORY = ["PERKEMBANGAN", "PERLU_BIMBINGAN"] as const;
+export type NoteCategory = (typeof NOTE_CATEGORY)[number];
+
 /* ---------- Tables ---------- */
 export const users = pgTable(
   "users",
@@ -278,6 +281,37 @@ export const paymentReceipts = pgTable(
   (t) => [uniqueIndex("receipts_payment_unique").on(t.paymentId)]
 );
 
+export const studentNotes = pgTable(
+  "student_notes",
+  {
+    id: text("id").primaryKey().notNull(),
+    studentId: text("student_id")
+      .notNull()
+      .references(() => students.id, { onDelete: "cascade" }),
+    extracurricularId: text("extracurricular_id")
+      .notNull()
+      .references(() => extracurriculars.id, { onDelete: "cascade" }),
+    category: text("category", { enum: NOTE_CATEGORY })
+      .notNull()
+      .default("PERKEMBANGAN"),
+    aspect: text("aspect").notNull(),
+    note: text("note").notNull(),
+    createdBy: text("created_by").references(() => users.id, {
+      onDelete: "set null",
+    }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [
+    index("notes_student_idx").on(t.studentId),
+    index("notes_ekskul_idx").on(t.extracurricularId),
+  ]
+);
+
 /* ---------- Relations ---------- */
 export const usersRelations = relations(users, ({ many, one }) => ({
   student: one(students, {
@@ -286,6 +320,7 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   }),
   staffAssignments: many(extracurricularStaff),
   recordedAttendance: many(attendance, { relationName: "recordedBy" }),
+  notesAuthored: many(studentNotes, { relationName: "noteAuthor" }),
 }));
 
 export const studentsRelations = relations(students, ({ one, many }) => ({
@@ -293,6 +328,7 @@ export const studentsRelations = relations(students, ({ one, many }) => ({
   memberships: many(memberships),
   attendanceRecords: many(attendance),
   payments: many(payments),
+  notes: many(studentNotes),
 }));
 
 export const extracurricularsRelations = relations(
@@ -302,6 +338,7 @@ export const extracurricularsRelations = relations(
     memberships: many(memberships),
     meetings: many(meetings),
     payments: many(payments),
+    notes: many(studentNotes),
   })
 );
 
@@ -384,6 +421,22 @@ export const paymentReceiptsRelations = relations(
   })
 );
 
+export const studentNotesRelations = relations(studentNotes, ({ one }) => ({
+  student: one(students, {
+    fields: [studentNotes.studentId],
+    references: [students.id],
+  }),
+  extracurricular: one(extracurriculars, {
+    fields: [studentNotes.extracurricularId],
+    references: [extracurriculars.id],
+  }),
+  author: one(users, {
+    fields: [studentNotes.createdBy],
+    references: [users.id],
+    relationName: "noteAuthor",
+  }),
+}));
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type Student = typeof students.$inferSelect;
@@ -392,3 +445,4 @@ export type Membership = typeof memberships.$inferSelect;
 export type Meeting = typeof meetings.$inferSelect;
 export type Attendance = typeof attendance.$inferSelect;
 export type Payment = typeof payments.$inferSelect;
+export type StudentNote = typeof studentNotes.$inferSelect;

@@ -21,7 +21,9 @@ export type Permission =
   | "payments.verify.scoped"
   | "payments.upload"
   | "receipts.view"
-  | "receipts.generate";
+  | "receipts.generate"
+  | "notes.manage"
+  | "notes.view";
 
 const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
   ADMIN: [
@@ -39,6 +41,8 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "payments.upload",
     "receipts.view",
     "receipts.generate",
+    "notes.manage",
+    "notes.view",
   ],
   PJ_GURU: [
     "students.view",
@@ -51,11 +55,14 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "payments.verify.scoped",
     "receipts.view",
     "receipts.generate",
+    "notes.manage",
+    "notes.view",
   ],
   SISWA: [
     "attendance.view",
     "payments.upload",
     "receipts.view",
+    "notes.view",
   ],
 };
 

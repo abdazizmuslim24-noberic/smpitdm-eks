@@ -6,6 +6,8 @@ import {
   attendance,
   meetings,
   payments,
+  studentNotes,
+  users,
 } from "@/db/schema";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { getStudentForUser } from "@/lib/auth/student-resolver";
@@ -85,6 +87,23 @@ export default async function SiswaDashboardPage() {
     .innerJoin(extracurriculars, eq(payments.extracurricularId, extracurriculars.id))
     .where(eq(payments.studentId, student.id))
     .orderBy(sql`${payments.createdAt} desc`)
+    .limit(6);
+
+  const myNotes = await db
+    .select({
+      id: studentNotes.id,
+      category: studentNotes.category,
+      aspect: studentNotes.aspect,
+      note: studentNotes.note,
+      ekskul: extracurriculars.name,
+      authorName: users.name,
+      createdAt: studentNotes.createdAt,
+    })
+    .from(studentNotes)
+    .innerJoin(extracurriculars, eq(studentNotes.extracurricularId, extracurriculars.id))
+    .innerJoin(users, eq(studentNotes.createdBy, users.id))
+    .where(eq(studentNotes.studentId, student.id))
+    .orderBy(sql`${studentNotes.createdAt} desc`)
     .limit(6);
 
   return (
@@ -169,6 +188,45 @@ export default async function SiswaDashboardPage() {
             </Table>
           </div>
         </div>
+
+        <div className="rounded-lg border bg-card shadow-sm lg:col-span-2">
+          <div className="border-b px-5 py-4">
+            <h2 className="font-heading font-semibold">Catatan dari Pembina</h2>
+          </div>
+          <div className="p-2">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Kategori</TableHead>
+                  <TableHead>Aspek / Kegiatan</TableHead>
+                  <TableHead>Catatan</TableHead>
+                  <TableHead>Ekskul</TableHead>
+                  <TableHead>Pembina</TableHead>
+                  <TableHead>Tanggal</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {myNotes.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center text-muted-foreground">
+                      Belum ada catatan dari pembina.
+                    </TableCell>
+                  </TableRow>
+                )}
+                {myNotes.map((n) => (
+                  <TableRow key={n.id}>
+                    <TableCell><NoteBadge category={n.category} /></TableCell>
+                    <TableCell className="font-medium">{n.aspect}</TableCell>
+                    <TableCell className="max-w-xs whitespace-normal">{n.note}</TableCell>
+                    <TableCell>{n.ekskul}</TableCell>
+                    <TableCell>{n.authorName}</TableCell>
+                    <TableCell>{n.createdAt.toLocaleDateString("id-ID")}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -183,6 +241,15 @@ function AttendanceBadge({ status }: { status: string }) {
     T: { label: "Terlambat", variant: "warning" },
   };
   const m = map[status] ?? { label: status, variant: "default" as const };
+  return <Badge variant={m.variant}>{m.label}</Badge>;
+}
+
+function NoteBadge({ category }: { category: string }) {
+  const map: Record<string, { label: string; variant: "success" | "warning" | "default" }> = {
+    PERKEMBANGAN: { label: "Perkembangan", variant: "success" },
+    PERLU_BIMBINGAN: { label: "Butuh Bimbingan", variant: "warning" },
+  };
+  const m = map[category] ?? { label: category, variant: "default" as const };
   return <Badge variant={m.variant}>{m.label}</Badge>;
 }
 
