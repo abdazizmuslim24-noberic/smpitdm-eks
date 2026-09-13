@@ -68,7 +68,7 @@ export function NotesTable({ rows }: { rows: PjNoteRow[] }) {
   }
 
   return (
-    <div className="rounded-lg border bg-card shadow-sm">
+    <div className="min-w-0 rounded-lg border bg-card shadow-sm">
       <div className="flex flex-wrap items-end gap-3 border-b p-3">
         {ekOptions.length > 1 && (
           <div className="space-y-1">
@@ -113,11 +113,11 @@ export function NotesTable({ rows }: { rows: PjNoteRow[] }) {
           <TableHeader>
             <TableRow>
               <TableHead>Siswa</TableHead>
-              <TableHead>Ekstrakurikuler</TableHead>
+              <TableHead className="hidden md:table-cell">Ekstrakurikuler</TableHead>
               <TableHead>Kategori</TableHead>
               <TableHead>Aspek / Kegiatan</TableHead>
               <TableHead>Catatan</TableHead>
-              <TableHead>Tanggal</TableHead>
+              <TableHead className="hidden md:table-cell">Tanggal</TableHead>
               <TableHead className="text-right">Aksi</TableHead>
             </TableRow>
           </TableHeader>
@@ -143,13 +143,13 @@ export function NotesTable({ rows }: { rows: PjNoteRow[] }) {
                       {n.className ? ` · ${n.className}` : ""}
                     </span>
                   </TableCell>
-                  <TableCell>{n.ekName}</TableCell>
+                  <TableCell className="hidden md:table-cell">{n.ekName}</TableCell>
                   <TableCell>
                     <Badge variant={cat.variant}>{cat.label}</Badge>
                   </TableCell>
-                  <TableCell className="font-medium">{n.aspect}</TableCell>
-                  <TableCell className="max-w-xs whitespace-normal">{n.note}</TableCell>
-                  <TableCell>{n.createdAt.toLocaleDateString("id-ID")}</TableCell>
+                  <TableCell className="font-medium max-w-[10rem] sm:max-w-none">{n.aspect}</TableCell>
+                  <TableCell className="max-w-[10rem] whitespace-normal sm:max-w-xs">{n.note}</TableCell>
+                  <TableCell className="hidden md:table-cell">{n.createdAt.toLocaleDateString("id-ID")}</TableCell>
                   <TableCell className="text-right">
                     <Button
                       size="sm"

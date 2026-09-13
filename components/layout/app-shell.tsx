@@ -151,7 +151,7 @@ export function AppShell({ brand, homeHref, user, navGroups, children }: AppShel
           </div>
           <ShieldCheck className="h-5 w-5 text-muted-foreground" />
         </header>
-        <main className="flex-1 p-4 pb-24 pt-20 lg:p-6 lg:pb-6 lg:pt-6">{children}</main>
+        <main className="min-w-0 flex-1 overflow-x-hidden p-4 pb-24 pt-20 lg:p-6 lg:pb-6 lg:pt-6">{children}</main>
         <footer className="border-t px-6 py-4 pb-20 text-center text-xs text-muted-foreground lg:pb-4">
           SMPITDM EKSKULKU — Sistem Manajemen Ekstrakurikuler · Created by{" "}
           <span className="font-semibold text-foreground">Pak Aziz</span>

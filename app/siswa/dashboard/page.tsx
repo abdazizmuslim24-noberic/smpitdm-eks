@@ -121,7 +121,7 @@ export default async function SiswaDashboardPage() {
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
-        <div className="rounded-lg border bg-card shadow-sm">
+        <div className="min-w-0 rounded-lg border bg-card shadow-sm">
           <div className="border-b px-5 py-4">
             <h2 className="font-heading font-semibold">Absensi Terbaru</h2>
           </div>
@@ -154,7 +154,7 @@ export default async function SiswaDashboardPage() {
           </div>
         </div>
 
-        <div className="rounded-lg border bg-card shadow-sm">
+        <div className="min-w-0 rounded-lg border bg-card shadow-sm">
           <div className="border-b px-5 py-4">
             <h2 className="font-heading font-semibold">Pembayaran Terbaru</h2>
           </div>
@@ -189,7 +189,7 @@ export default async function SiswaDashboardPage() {
           </div>
         </div>
 
-        <div className="rounded-lg border bg-card shadow-sm lg:col-span-2">
+        <div className="min-w-0 rounded-lg border bg-card shadow-sm lg:col-span-2">
           <div className="border-b px-5 py-4">
             <h2 className="font-heading font-semibold">Catatan dari Pembina</h2>
           </div>
@@ -200,9 +200,9 @@ export default async function SiswaDashboardPage() {
                   <TableHead>Kategori</TableHead>
                   <TableHead>Aspek / Kegiatan</TableHead>
                   <TableHead>Catatan</TableHead>
-                  <TableHead>Ekskul</TableHead>
-                  <TableHead>Pembina</TableHead>
-                  <TableHead>Tanggal</TableHead>
+                  <TableHead className="hidden sm:table-cell">Ekskul</TableHead>
+                  <TableHead className="hidden md:table-cell">Pembina</TableHead>
+                  <TableHead className="hidden md:table-cell">Tanggal</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -217,10 +217,10 @@ export default async function SiswaDashboardPage() {
                   <TableRow key={n.id}>
                     <TableCell><NoteBadge category={n.category} /></TableCell>
                     <TableCell className="font-medium">{n.aspect}</TableCell>
-                    <TableCell className="max-w-xs whitespace-normal">{n.note}</TableCell>
-                    <TableCell>{n.ekskul}</TableCell>
-                    <TableCell>{n.authorName}</TableCell>
-                    <TableCell>{n.createdAt.toLocaleDateString("id-ID")}</TableCell>
+                    <TableCell className="max-w-[10rem] whitespace-normal sm:max-w-xs">{n.note}</TableCell>
+                    <TableCell className="hidden sm:table-cell">{n.ekskul}</TableCell>
+                    <TableCell className="hidden md:table-cell">{n.authorName}</TableCell>
+                    <TableCell className="hidden md:table-cell">{n.createdAt.toLocaleDateString("id-ID")}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
